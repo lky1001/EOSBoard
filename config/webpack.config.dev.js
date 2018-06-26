@@ -11,6 +11,7 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -82,7 +83,7 @@ module.exports = {
     // https://github.com/facebookincubator/create-react-app/issues/290
     // `web` extension prefixes have been added for better support
     // for React Native Web.
-    extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
+    extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx', '.scss'],
     alias: {
       
       // Support React Native Web
@@ -159,18 +160,18 @@ module.exports = {
           {
             test: /\.css$/,
             use: [
-              require.resolve('style-loader'),
+              {
+                loader: require.resolve('style-loader'),
+              },
               {
                 loader: require.resolve('css-loader'),
                 options: {
                   importLoaders: 1,
-                },
+                }
               },
               {
                 loader: require.resolve('postcss-loader'),
                 options: {
-                  // Necessary for external CSS imports to work
-                  // https://github.com/facebookincubator/create-react-app/issues/2677
                   ident: 'postcss',
                   plugins: () => [
                     require('postcss-flexbugs-fixes'),
@@ -179,14 +180,49 @@ module.exports = {
                         '>1%',
                         'last 4 versions',
                         'Firefox ESR',
-                        'not ie < 9', // React doesn't support IE8 anyway
+                        'not ie < 9',  
                       ],
                       flexbox: 'no-2009',
                     }),
                   ],
                 },
+              }, 
+            ]
+          },
+          {
+            test: /\.scss$/,
+            use: [
+              {
+                loader: require.resolve('style-loader'),
               },
-            ],
+              {
+                loader: require.resolve('css-loader'),
+                options: {
+                  importLoaders: 1,
+                }
+              },
+              {
+                loader: require.resolve('sass-loader'),
+              },
+              {
+                loader: require.resolve('postcss-loader'),
+                options: {
+                  ident: 'postcss',
+                  plugins: () => [
+                    require('postcss-flexbugs-fixes'),
+                    autoprefixer({
+                      browsers: [
+                        '>1%',
+                        'last 4 versions',
+                        'Firefox ESR',
+                        'not ie < 9',  
+                      ],
+                      flexbox: 'no-2009',
+                    }),
+                  ],
+                },
+              }, 
+            ]
           },
           // "file" loader makes sure those assets get served by WebpackDevServer.
           // When you `import` an asset, you get its (virtual) filename.
@@ -198,7 +234,17 @@ module.exports = {
             // its runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.(js|jsx|mjs)$/, /\.html$/, /\.json$/],
+            exclude: [
+              /\.html$/,
+              /\.(js|jsx)$/,
+              /\.css$/,
+              /\.json$/,
+              /\.bmp$/,
+              /\.gif$/,
+              /\.jpe?g$/,
+              /\.png$/,
+              /\.scss$/,
+            ],
             loader: require.resolve('file-loader'),
             options: {
               name: 'static/media/[name].[hash:8].[ext]',
@@ -243,6 +289,7 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new ExtractTextPlugin({ filename: 'styles.css', allChunks: true, disable: process.env.NODE_ENV !== 'production' }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
