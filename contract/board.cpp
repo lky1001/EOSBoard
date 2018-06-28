@@ -1,15 +1,19 @@
 #include "board.hpp"
 
-using namespace eosio;
-namespace eos_board {
-    struct impl {
-    };
+uint64_t board::_id = 1;
+
+void board::list(uint64_t page) {
+
 }
 
-extern "C" {
-    using namespace eos_board;
+void board::write(account_name writer, string title) {
 
-    void apply( uint64_t receiver, uint64_t code, uint64_t action ) {
-      impl().apply(receiver, code, action);
-   }
+}
+
+void board::read(uint64_t _id) {
+
+}
+
+void board::remove(uint64_t _id) {
+
 }
