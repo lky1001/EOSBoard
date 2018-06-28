@@ -10,7 +10,7 @@ const Home = () => {
 
             <section className="content">
                 <main>
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita harum tempore repudiandae dolorem modi, libero repellendus voluptas rem cum, enim mollitia suscipit eius autem quam ea. Quidem dolores nostrum reiciendis?
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elitsdf. Expedita harum tempore repudiandae dolorem modi, libero repellendus voluptas rem cum, enim mollitia suscipit eius autem quam ea. Quidem dolores nostrum reiciendis?
                 </main>
 
                 <aside>
