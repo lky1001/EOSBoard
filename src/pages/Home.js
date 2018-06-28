@@ -1,21 +1,29 @@
 import React from 'react';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import "../styles/Home.scss";
 
 const Home = () => {
     return  (
-        <div>
+        <div className="root">
             <header className="header">
-                헤더
+                Welcome to the EOS tweet.
             </header>
 
             <section className="content">
-                <main>
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elitsdf. Expedita harum tempore repudiandae dolorem modi, libero repellendus voluptas rem cum, enim mollitia suscipit eius autem quam ea. Quidem dolores nostrum reiciendis?
-                </main>
+                <Grid container spacing={24}>
+                    <Grid item xs={12} sm={6} md={8}>
+                        <main>
+                            <Paper className="paper">Tweet goes here.</Paper>
+                        </main>
+                    </Grid>
 
-                <aside>
-                    차트 영역
-                </aside>
+                    <Grid item xs={12} sm={6} md={4}>
+                        <aside>
+                            <Paper className="paper">Chart goes here.</Paper>
+                        </aside>
+                    </Grid>
+                </Grid>
             </section>
         </div>
     );

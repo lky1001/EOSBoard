@@ -2,22 +2,29 @@ header {
     background : darkcyan;
     color : white;
     text-align: center;
+    padding:16px;
+}
+
+.root {
+    flex-grow: 1;
 }
 
 .content {
     display: flex;
 }
 
-.content>main{
-    background: #B71C1C;
+main{
     color: white;
-    width : 100%;
 }
 
-.content>aside{
-    width : 200px;
-    flex-shrink: 0;
-    background: #FBC02D;
+aside{
     color : white;
+}
+
+.paper {
+    min-height: 200px;
+    padding: 16px;
+    text-align: center;
+    color: black,
 }
   
