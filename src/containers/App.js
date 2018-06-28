@@ -75,7 +75,7 @@ class App extends Component {
             </Toolbar>
           </AppBar>
 
-          <div style={{marginTop: '4rem'}}>
+          <div>
             <Routes />
           </div>
         </div>

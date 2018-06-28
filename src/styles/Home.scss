@@ -1,0 +1,23 @@
+header {
+    background : darkcyan;
+    color : white;
+    text-align: center;
+}
+
+.content {
+    display: flex;
+}
+
+.content>main{
+    background: #B71C1C;
+    color: white;
+    width : 100%;
+}
+
+.content>aside{
+    width : 200px;
+    flex-shrink: 0;
+    background: #FBC02D;
+    color : white;
+}
+  

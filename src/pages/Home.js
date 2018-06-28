@@ -1,11 +1,22 @@
 import React from 'react';
+import "../styles/Home.scss";
 
 const Home = () => {
     return  (
         <div>
-            <h2>
-                홈
-            </h2>
+            <header className="header">
+                헤더
+            </header>
+
+            <section className="content">
+                <main>
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita harum tempore repudiandae dolorem modi, libero repellendus voluptas rem cum, enim mollitia suscipit eius autem quam ea. Quidem dolores nostrum reiciendis?
+                </main>
+
+                <aside>
+                    차트 영역
+                </aside>
+            </section>
         </div>
     );
 };
