@@ -24,9 +24,10 @@ $ npm run build
 $ npm test
 ```
 ## C++ Enviroment setting on VS Code.
-1. - Download Mingw at https://sourceforge.net/projects/mingw-w64/
-2. Add System Variables on the Path. ex) MINGW_HOME - C:\Mingw.
-3. Create tasks.json and paste it.
+- Download Mingw at https://sourceforge.net/projects/mingw-w64/
+- Add System Variables on the Path. ex) MINGW_HOME - C:\Mingw.
+- Create tasks.json and paste it.
+```
    {
    "version": "2.0.0",
    "runner": "terminal",
@@ -158,4 +159,4 @@ $ npm test
    }
    ]
    }
-
+```
