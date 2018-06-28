@@ -1,6 +1,7 @@
 #include <eosiolib/eosio.hpp>
 
 using namespace eosio;
+using namespace std;
 
 class board : public contract {
     using contract::contract;

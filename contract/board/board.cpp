@@ -6,7 +6,7 @@ void board::list(uint64_t page) {
 
 }
 
-void board::write(account_name writer, string title) {
+void board::write(account_name writer, string title, string content) {
 
 }
 
