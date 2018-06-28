@@ -1,4 +1,5 @@
 #include <eosiolib/eosio.hpp>
+#include <eosiolib/print.hpp>
 
 using namespace eosio;
 using namespace std;
@@ -10,7 +11,7 @@ public:
     
     void list(uint64_t _page);
 
-    void write(account_name writer, string title, string content);
+    void write(string title, string content);
 
     void read(uint64_t _id);
 

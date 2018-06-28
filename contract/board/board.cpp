@@ -6,8 +6,9 @@ void board::list(uint64_t page) {
 
 }
 
-void board::write(account_name writer, string title, string content) {
-
+void board::write(string title, string content) {
+    account_name writer = get_account();
+    print( "Hello, ", name{writer});
 }
 
 void board::read(uint64_t _id) {
