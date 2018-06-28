@@ -27,7 +27,7 @@ $ npm test
 - Download Mingw at https://sourceforge.net/projects/mingw-w64/
 - Add System Variables on the Path. ex) MINGW_HOME - C:\Mingw.
 - Create tasks.json and paste it.
-```json
+```
    {
       "version": "2.0.0",
       "runner": "terminal",
