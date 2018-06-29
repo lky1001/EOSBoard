@@ -24,6 +24,16 @@ $ npm run build
 $ npm test
 ```
 
+## create contract account
+```
+$ cleos create account eosio board ownerkey activekey
+```
+
+## set contract
+```
+$ cleos set contract board /path_to/contract/board
+```
+
 ## write
 ```
 $ cleos push action board write '["board","a","b"]' -p board
