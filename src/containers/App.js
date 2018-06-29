@@ -59,9 +59,10 @@ class App extends Component {
   };
 
   render() {
+    
     return (
-      <Router>
-        <div className="App">
+      <Router >
+        <div className="App theme-dark">
           <AppBar position="static">
             <Toolbar>
               <IconButton
