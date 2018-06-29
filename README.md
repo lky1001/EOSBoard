@@ -23,6 +23,30 @@ $ npm run build
 ```
 $ npm test
 ```
+
+## write
+```
+$ cleos push action board write '["board","a","b"]' -p board
+```
+
+## get data
+```
+$ cleos get table board board mcontent
+{
+  "rows": [{
+      "_id": 1,
+      "title": "a",
+      "content": "b",
+      "author": "board",
+      "created": 1530247482,
+      "deleted": 0
+    }
+  ],
+  "more": false
+}
+```
+
+
 ## C++ Enviroment setting on VS Code.
 - Download Mingw at https://sourceforge.net/projects/mingw-w64/
 - Add System Variables on the Path. ex) MINGW_HOME - C:\Mingw.
