@@ -22,7 +22,7 @@ private:
     static uint64_t _id;
 
     // @abi table
-    struct content {
+    struct mcontent {
         uint64_t _id;
         string title;
         string content;
@@ -33,7 +33,7 @@ private:
         uint64_t primary_key() const { return _id; }
     };
 
-    typedef multi_index<N(content), content> contents;
+    typedef multi_index<N(mcontent), mcontent> contents;
 };
 
 EOSIO_ABI(board, (list)(write)(read)(remove))

@@ -6,17 +6,17 @@ void board::list(uint64_t page) {
 
 }
 
-void board::write(account_name author, tring title, string content) {
+void board::write(account_name author, string title, string content) {
     require_auth(author);
 
-    content content_table(_self, _self);
+    contents content_table(_self, _self);
     
-    content_table.emplacE(author, [&](auto& content){
-        content._id = _id;
-        content.title = title;
-        content.content = content;
-        content.author = author;
-        content.created = now();
+    content_table.emplace(author, [&](auto& mcontent) {
+        mcontent._id = _id;
+        mcontent.title = title;
+        mcontent.content = content;
+        mcontent.author = author;
+        mcontent.created = now();
     });
 }
 
