@@ -38,28 +38,51 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      id: null
+    };
+
     document.addEventListener('scatterLoaded', scatterExtension => {
       this.scatter = window.scatter;
       window.scatter = null;
 
       this.eos = this.scatter.eos(scatterNetwork, Eos, config);
 
+      if (this.scatter.identity) {
+        this.setState({
+          id: this.scatter.identity
+        });
+      }
     });
   }
 
-  handleLogin = () => {
+  handleLogin = async () => {
     if (this.scatter) {
-      this.scatter.getIdentity().then(id => {
-        if(!id) return false;
+      let id = await this.scatter.getIdentity();
 
-        
-        this.scatter.useIdentity(id.hash);
-        console.log('Possible identity', id);
-      });
+      if (id) {
+        this.scatter.useIdentity(id);
+        console.log('Possible identity', this.scatter.identity);
+        this.setState({
+          id: id
+        });
+      }
     } else {
       // todo - login eosjs with private key
     }
   };
+
+  handleLogout = async () => {
+    if (this.scatter) {
+      let res = await this.scatter.forgetIdentity();
+
+      console.log('logout : ' + res);
+
+      this.setState({
+        id: null
+      });
+    }
+  }
 
   render() {
     
@@ -73,9 +96,19 @@ class App extends Component {
                     to="/"
                     color="inherit">
               </IconButton>
-              <Button color="inherit" onClick={this.handleLogin}>
-                LOGIN
-              </Button>
+              {
+                !this.state.id &&
+                <Button color="inherit" onClick={this.handleLogin}>
+                  LOGIN
+                </Button>
+              }
+              {
+                this.state.id &&
+                // todo - username
+                <Button color="inherit" onClick={this.handleLogout}>
+                  LOGOUT
+                </Button>
+              }
             </Toolbar>
           </AppBar>
 
