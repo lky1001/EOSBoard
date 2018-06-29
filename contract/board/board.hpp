@@ -8,11 +8,12 @@ using namespace std;
 class board : public contract {
     using contract::contract;
 public:
+
     board(account_name self) : contract(self) {}
     
     void list(uint64_t _page);
 
-    void write(string title, string content);
+    void write(account_name author, string title, string content);
 
     void read(uint64_t _id);
 
@@ -25,7 +26,7 @@ private:
         uint64_t _id;
         string title;
         string content;
-        account_name writer;
+        account_name author;
         time created;
         time deleted;
 

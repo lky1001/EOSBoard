@@ -6,11 +6,18 @@ void board::list(uint64_t page) {
 
 }
 
-void board::write(string title, string content) {
-    account_name writer = Action::get_account();
-    account_name n = Action::get_name();
-    print( "Hello, ", name{writer});
-    print( "My name is ", name{n});
+void board::write(account_name author, tring title, string content) {
+    require_auth(author);
+
+    content content_table(_self, _self);
+    
+    content_table.emplacE(author, [&](auto& content){
+        content._id = _id;
+        content.title = title;
+        content.content = content;
+        content.author = author;
+        content.created = now();
+    });
 }
 
 void board::read(uint64_t _id) {
