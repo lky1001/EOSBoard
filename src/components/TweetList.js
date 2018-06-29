@@ -32,14 +32,17 @@ const samples = [
 
 const TweetList = () => {
   return (
-    <Paper className="myTweetPaper">
-      <List component="nav">
-          {
-              samples.map(i => {
-                  return <Tweet nickName={i.nickName} date={i.date}/>
-              })
-          }
-      </List>
+    <Paper className="paper">
+        <div className="tweetlistHeader">
+            Latest tweets
+        </div>
+        <List component="nav">
+            {
+                samples.map((i, index) => {
+                    return <Tweet nickName={i.nickName} date={i.date} key={index}/>
+                })
+            }
+        </List>
     </Paper>
   );
 }

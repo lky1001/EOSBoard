@@ -24,22 +24,28 @@ aside{
 }
 
 .paper {
-    min-height: 200px;
-    padding: 16px;
-    margin:32px;
-    text-align: center;
-    color: black,
-}
-
-.myTweetPaper{
     display:flex;
-    height : auto;
-    padding: 16px;
+    flex-direction: column;
+    min-height: 200px;
     margin:32px;
-    color: black;
 }
 
-.sampleBtn {
+.writingTweetPaper{
+    display: flex;
+    height:auto;
+    margin:32px;
+}
+
+.tweetlistHeader{
+    font-size: 2rem;
+    padding:16px;
+    text-align: start;
+    color:#757575;
+    background: #F5F5F5;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.tweetBtn {
     @include themify($themes) {
       color: themed('textColor');  
       background-color: themed('backgroundColor');  

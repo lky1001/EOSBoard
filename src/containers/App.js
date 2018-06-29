@@ -43,6 +43,7 @@ class App extends Component {
       window.scatter = null;
 
       this.eos = this.scatter.eos(scatterNetwork, Eos, config);
+
     });
   }
 
@@ -50,6 +51,8 @@ class App extends Component {
     if (this.scatter) {
       this.scatter.getIdentity().then(id => {
         if(!id) return false;
+
+        
         this.scatter.useIdentity(id.hash);
         console.log('Possible identity', id);
       });
