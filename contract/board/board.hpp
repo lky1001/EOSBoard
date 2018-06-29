@@ -25,8 +25,6 @@ private:
         id_sequence() {}
         constexpr static uint64_t key = N(id_sequence);
         uint64_t _id = 2;
-
-        EOSLIB_SERIALIZE( mcontent, (_id))
     };
 
     void store_id_sequence(const id_sequence &seq) {
@@ -61,8 +59,6 @@ private:
         time deleted;
 
         uint64_t primary_key() const { return _id; }
-
-        EOSLIB_SERIALIZE( mcontent, (_id)(title)(content)(author)(created)(deleted) )
     };
 
     typedef multi_index<N(mcontent), mcontent> contents;
