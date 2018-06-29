@@ -24,14 +24,14 @@ private:
     struct id_sequence {
         id_sequence() {}
         constexpr static uint64_t key = N(id_sequence);
-        uint64_t _id = 1;
-    }
+        uint64_t _id = 2;
+    };
 
     void store_id_sequence(const id_sequence &seq) {
         auto iter = db_find_i64(_self, _self, N(id_sequence), id_sequence::key);
 
         if (iter != -1) {
-            db_update_i64(iter, _self, (const char *)&sesq, sizeof(id_sequence));
+            db_update_i64(iter, _self, (const char *)&seq, sizeof(id_sequence));
         } else {
             db_store_i64(_self, N(id_sequence), _self, id_sequence::key, (const char *)&seq, sizeof(id_sequence));
         }
