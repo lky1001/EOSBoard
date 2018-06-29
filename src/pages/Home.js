@@ -7,10 +7,6 @@ import "../styles/Home.scss";
 import TweetList from '../components/TweetList';
 
 class Home extends Component {
-
-    componentDidMount = () =>{
-    }
-
     render(){
         return  (
             <div className="root">

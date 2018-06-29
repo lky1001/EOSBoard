@@ -6,7 +6,7 @@ void board::list(uint64_t page) {
 
 void board::write(account_name author, string title, string content) {
     require_auth(author);
-
+    
     contents content_table(_self, _self);
 
     id_sequence seq;
