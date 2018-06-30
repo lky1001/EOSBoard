@@ -1,10 +1,18 @@
 @import 'themes.scss';
 
 .header {
-    background : darkcyan;
-    color : white;
     text-align: center;
-    padding:16px;
+}
+
+.nav{
+    @include themify($themes) {
+        color: themed('subTextColor');  
+        background: themed('subBackgroundColor');  
+    }
+}
+
+.headlineRegion{
+    margin : 64px;
 }
 
 .root {
@@ -28,17 +36,19 @@ aside{
 
 .writingTweetPaper{
     display: flex;
-    height:auto;
+    height:56px;
     margin:32px;
 }
 
 .tweetlistHeader{
-    font-size: 2rem;
-    padding:16px;
+    font-size: 1.5rem;
+    padding:24px;
     text-align: start;
-    color:#757575;
-    background: #F5F5F5;
-    border-bottom: 1px solid #EEEEEE;
+    
+    @include themify($themes) {
+        color: themed('subTextColor');  
+        border-bottom: 1px solid themed('subBackgroundColor');
+      }
 }
 
 .bootstrapRoot {

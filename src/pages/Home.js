@@ -3,10 +3,16 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import "../styles/Home.scss";
+import Typography from '@material-ui/core/Typography';
 import TweetList from '../components/TweetList';
-import * as Eos from 'eosjs';
 import TweetChart from '../components/TweetChart';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import QnAIcon from '@material-ui/icons/QuestionAnswer';
+import ExtIcon from '@material-ui/icons/Extension';
+import * as Eos from 'eosjs';
+import "../styles/Home.scss";
 
 const CONTRACT_NAME = "board";
 const TABLE_NAME = "mcontent";
@@ -30,7 +36,8 @@ class Home extends Component {
         
         this.state = {
             msg : '',
-            latestTweets : []
+            latestTweets : [],
+            navIndex : 0
         };
 
         document.addEventListener('scatterLoaded', scatterExtension => {
@@ -116,13 +123,35 @@ class Home extends Component {
 
     }
 
+    handleNavChange = (event, value) => {
+        console.log(value);
+        this.setState({
+            navIndex : value
+        })
+    }
+
     render(){
         const { msg } = this.state;
         
         return  (
             <div className="root">
                 <header className="header">
-                    Welcome to the EOS tweet.
+                    <BottomNavigation className="nav"
+                        onChange={this.handleNavChange}
+                        showLabels>
+                        <BottomNavigationAction label="Dashboard" icon={<DashboardIcon />} />
+                        <BottomNavigationAction label="History" icon={<QnAIcon />} />
+                        <BottomNavigationAction label="Settings" icon={<ExtIcon />} />
+                    </BottomNavigation>
+
+                    <div className="headlineRegion">
+                        <Typography variant="display4">
+                            FACEOS
+                        </Typography>
+                        <Typography variant="display2">
+                            Say hello to the tweet box.
+                        </Typography>
+                    </div>
                 </header>
 
                 <section className="content">
