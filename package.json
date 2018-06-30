@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@vx/axis": "^0.0.168",
+    "@vx/gradient": "^0.0.165",
+    "@vx/group": "^0.0.165",
+    "@vx/mock-data": "^0.0.165",
+    "@vx/scale": "^0.0.165",
+    "@vx/shape": "^0.0.168",
     "@material-ui/core": "^1.3.0",
     "@material-ui/icons": "^1.1.0",
     "autoprefixer": "7.1.6",

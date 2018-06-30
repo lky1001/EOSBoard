@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import "../styles/Home.scss";
 import TweetList from '../components/TweetList';
 import * as Eos from 'eosjs';
+import TweetChart from '../components/TweetChart';
 
 const CONTRACT_NAME = "board";
 const TABLE_NAME = "mcontent";
@@ -148,7 +149,9 @@ class Home extends Component {
 
                         <Grid item xs={12} sm={6} md={4}>
                             <aside>
-                                <Paper className="paper">Chart goes here.</Paper>
+                                <Paper className="paper">
+                                    <TweetChart/>
+                                </Paper>
                             </aside>
                         </Grid>
                     </Grid>
