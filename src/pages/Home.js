@@ -116,6 +116,8 @@ class Home extends Component {
     }
 
     render(){
+        const { msg } = this.state;
+        
         return  (
             <div className="root">
                 <header className="header">
@@ -124,10 +126,18 @@ class Home extends Component {
 
                 <section className="content">
                     <Paper className="writingTweetPaper">
-                        <TextField fullWidth value={this.state.msg} onChange={this.handleChange('msg')}/>
+                        <TextField
+                            fullWidth
+                            value={msg}
+                            onChange={this.handleChange('msg')}
+                            InputProps={{
+                                disableUnderline: true
+                            }}
+                        />
                         <Button variant="contained" color="primary" className="tweetBtn" onClick={this.handleTweet}>
                             Tweet
                         </Button>
+                        
                     </Paper>
                     <Grid container spacing={24}>
                         <Grid item xs={12} sm={6} md={8}>

@@ -1,6 +1,6 @@
 @import 'themes.scss';
 
-header {
+.header {
     background : darkcyan;
     color : white;
     text-align: center;
@@ -9,10 +9,6 @@ header {
 
 .root {
     flex-grow: 1;
-}
-
-.content {
-    
 }
 
 main{
@@ -44,6 +40,23 @@ aside{
     background: #F5F5F5;
     border-bottom: 1px solid #EEEEEE;
 }
+
+.bootstrapRoot {
+    padding: 0;
+}
+
+.bootstrapInput {
+    border-radius: 4;
+    border: '1px solid #ced4da';
+    font-size: 16;
+    padding: '10px 12px';
+    width: 'calc(100% - 24px)';
+    background: white;
+    
+    &:focus {
+      border: '#80bdff'
+    };
+  }
 
 .tweetBtn {
     @include themify($themes) {
