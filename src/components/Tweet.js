@@ -7,7 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import PersonIcon from '@material-ui/icons/Person';
 
 const Tweet = (props) => {
-    const {nickName, date} = props;
+    const {author, content, created} = props;
 
   return (
     <Fragment>
@@ -17,8 +17,8 @@ const Tweet = (props) => {
                     <PersonIcon />
                 </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={nickName} secondary="Content goes here."/>
-            <ListItemText primary={date} />
+            <ListItemText primary={author} secondary={content}/>
+            <ListItemText primary={created} />
         </ListItem>
         <Divider/>
     </Fragment>

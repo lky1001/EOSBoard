@@ -14,7 +14,7 @@ const CONTRACT_NAME = "eos.board";
 
 const requiredFields = {
   accounts:[
-      {blockchain:'eos', host:'127.0.0.1', port:8888}
+      {blockchain:'eos', host:'127.0.0.1', port:8888, chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'}
   ]
 };
 
@@ -32,7 +32,6 @@ const config = {
   chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
 };
 
-
 class App extends Component {
   
   constructor(props) {
@@ -44,7 +43,6 @@ class App extends Component {
 
     document.addEventListener('scatterLoaded', scatterExtension => {
       this.scatter = window.scatter;
-      window.scatter = null;
 
       this.eos = this.scatter.eos(scatterNetwork, Eos, config);
 
@@ -58,8 +56,8 @@ class App extends Component {
 
   handleLogin = async () => {
     if (this.scatter) {
-      let id = await this.scatter.getIdentity();
-
+      let id = await this.scatter.getIdentity(requiredFields);
+      
       if (id) {
         this.scatter.useIdentity(id);
         console.log('Possible identity', this.scatter.identity);
