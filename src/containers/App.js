@@ -7,31 +7,9 @@ import IconButton from '@material-ui/core/IconButton';
 import HomeIcon from '@material-ui/icons/Home';
 import { NavLink } from 'react-router-dom';
 import Routes from '../Routes';
-import * as Eos from 'eosjs';
+import Typography from '@material-ui/core/Typography';
 import '../styles/App.scss';
 import { withRoot } from '../contexts/RootContext';
-
-const CONTRACT_NAME = "eos.board";
-
-const requiredFields = {
-  accounts:[
-      {blockchain:'eos', host:'127.0.0.1', port:8888, chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'}
-  ]
-};
-
-const scatterNetwork = {
-  protocol:'http',
-  blockchain: 'eos',
-  host: '127.0.0.1',
-  port: 8888,
-  chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
-};
-
-const config = {
-  broadcast: true,
-  sign: true,
-  chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
-};
 
 class App extends Component {
   
@@ -41,37 +19,12 @@ class App extends Component {
     this.state = {
       id: null
     };
-
-    document.addEventListener('scatterLoaded', scatterExtension => {
-      this.scatter = window.scatter;
-
-      this.eos = this.scatter.eos(scatterNetwork, Eos, config);
-
-      if (this.scatter.identity) {
-        this.setState({
-          id: this.scatter.identity
-        });
-      }
-    });
   }
 
   handleLogin = async () => {
     const { login } = this.props;
     await login();
-    // if (this.scatter) {
-    //   let id = await this.scatter.getIdentity(requiredFields);
-      
-    //   if (id) {
-    //     this.scatter.useIdentity(id);
-    //     console.log('Possible identity', this.scatter.identity);
-    //     this.setState({
-    //       id: id
-    //     });
-    //   }
-    // } else {
-    //   // todo - login eosjs with private key
-    // }
-  };
+  }
 
   handleLogout = async () => {
     const { logout } = this.props;
@@ -93,17 +46,22 @@ class App extends Component {
                       <HomeIcon/>
                 </IconButton>
                 {
-                  !this.state.id &&
+                  !identity &&
                   <Button color="inherit" onClick={this.handleLogin}>
                     LOGIN
                   </Button>
                 }
                 {
-                  this.state.id &&
-                  // todo - username
-                  <Button color="inherit" onClick={this.handleLogout}>
-                    LOGOUT
-                  </Button>
+                  identity &&
+                    <Button color="inherit" onClick={this.handleLogout}>
+                      LOGOUT
+                    </Button>
+                }
+                {
+                  identity &&
+                  <Typography variant="title" color="inherit">
+                      Welcome {accountName}!
+                  </Typography>    
                 }
               </Toolbar>
             </AppBar>

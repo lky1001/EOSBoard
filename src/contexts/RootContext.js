@@ -28,7 +28,6 @@ const CONFIG = {
 };
 
 class RootProvider extends Component {
-
     constructor(props) {
         super(props);
 
@@ -58,7 +57,7 @@ class RootProvider extends Component {
 
                     this.setState({
                         identity: id,
-                        accountName: accountName
+                        accountName: accountName.name
                     });
                 }
             } else {
@@ -102,7 +101,7 @@ function withRoot(WrappedComponent) {
                         identity={state.identity}
                         accountName={state.accountName}
                         login={actions.login}
-                        login={actions.login}
+                        logout={actions.logout}
                     />
                 )
             }
