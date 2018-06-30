@@ -24,17 +24,26 @@ const CONFIG = {
 };
 
 class Home extends Component {
-    state = {
-        msg : '',
-        latestTweets : []
-    }
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            msg : '',
+            latestTweets : []
+        };
 
+        document.addEventListener('scatterLoaded', scatterExtension => {
+            this.load();
+          });
+    }
+    
     load = () => {
         this.scatter = window.scatter;
 
         if (this.scatter) {
             this.eos = this.scatter.eos(NETWORK, Eos, CONFIG);
             
+            this.loadLatestTweets();
         }
     }
     

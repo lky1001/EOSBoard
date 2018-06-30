@@ -9,6 +9,7 @@ import Routes from '../Routes';
 import * as Eos from 'eosjs';
 import logo from '../statics/logo.svg';
 import '../styles/App.scss';
+import { EosProvider } from '../providers/EosProvider';
 
 const CONTRACT_NAME = "eos.board";
 
@@ -85,36 +86,38 @@ class App extends Component {
   render() {
     
     return (
-      <Router >
-        <div className="App theme-dark">
-          <AppBar position="static">
-            <Toolbar>
-              <IconButton
-                    component={NavLink}
-                    to="/"
-                    color="inherit">
-              </IconButton>
-              {
-                !this.state.id &&
-                <Button color="inherit" onClick={this.handleLogin}>
-                  LOGIN
-                </Button>
-              }
-              {
-                this.state.id &&
-                // todo - username
-                <Button color="inherit" onClick={this.handleLogout}>
-                  LOGOUT
-                </Button>
-              }
-            </Toolbar>
-          </AppBar>
+      <EosProvider>
+        <Router >
+          <div className="App theme-dark">
+            <AppBar position="static">
+              <Toolbar>
+                <IconButton
+                      component={NavLink}
+                      to="/"
+                      color="inherit">
+                </IconButton>
+                {
+                  !this.state.id &&
+                  <Button color="inherit" onClick={this.handleLogin}>
+                    LOGIN
+                  </Button>
+                }
+                {
+                  this.state.id &&
+                  // todo - username
+                  <Button color="inherit" onClick={this.handleLogout}>
+                    LOGOUT
+                  </Button>
+                }
+              </Toolbar>
+            </AppBar>
 
-          <div>
-            <Routes />
+            <div>
+              <Routes />
+            </div>
           </div>
-        </div>
-      </Router>
+        </Router>
+      </EosProvider>
     );
   }
 }
