@@ -1,8 +1,25 @@
-# EOS Board
+# FACEOS
 This project is board app on EOS blockchain
 
 Create react project by create-react-app
 - https://github.com/facebook/create-react-app
+
+
+## Required
+- React
+- React-router
+- Material-ui
+- Webpack
+- Sass
+- Eos.js
+- Scatter
+
+
+## EOS Environment
+- Docker (ubuntu 16.04)
+- Nodeos
+- Cleos
+- Keos
 
 ## Install dependencies
 ```
