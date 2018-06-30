@@ -9,7 +9,7 @@ import Routes from '../Routes';
 import * as Eos from 'eosjs';
 import logo from '../statics/logo.svg';
 import '../styles/App.scss';
-import { EosProvider } from '../providers/EosProvider';
+import { withRoot } from '../contexts/RootContext';
 
 const CONTRACT_NAME = "eos.board";
 
@@ -56,37 +56,32 @@ class App extends Component {
   }
 
   handleLogin = async () => {
-    if (this.scatter) {
-      let id = await this.scatter.getIdentity(requiredFields);
+    const { login } = this.props;
+    await login();
+    // if (this.scatter) {
+    //   let id = await this.scatter.getIdentity(requiredFields);
       
-      if (id) {
-        this.scatter.useIdentity(id);
-        console.log('Possible identity', this.scatter.identity);
-        this.setState({
-          id: id
-        });
-      }
-    } else {
-      // todo - login eosjs with private key
-    }
+    //   if (id) {
+    //     this.scatter.useIdentity(id);
+    //     console.log('Possible identity', this.scatter.identity);
+    //     this.setState({
+    //       id: id
+    //     });
+    //   }
+    // } else {
+    //   // todo - login eosjs with private key
+    // }
   };
 
   handleLogout = async () => {
-    if (this.scatter) {
-      let res = await this.scatter.forgetIdentity();
-
-      console.log('logout : ' + res);
-
-      this.setState({
-        id: null
-      });
-    }
+    const { logout } = this.props;
+    await logout();
   }
 
   render() {
-    
+    const { identity, accountName } = this.props;
+
     return (
-      <EosProvider>
         <Router >
           <div className="App theme-dark">
             <AppBar position="static">
@@ -117,9 +112,8 @@ class App extends Component {
             </div>
           </div>
         </Router>
-      </EosProvider>
     );
   }
 }
 
-export default App;
+export default withRoot((App));
