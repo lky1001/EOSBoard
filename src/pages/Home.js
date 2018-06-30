@@ -95,11 +95,12 @@ class Home extends Component {
     };
 
     loadLatestTweets = () =>{
-        this.eos.getTableRows(true, CONTRACT_NAME, CONTRACT_NAME, TABLE_NAME).then((data) => {
+        this.eos.getTableRows(true, CONTRACT_NAME, CONTRACT_NAME, TABLE_NAME, '', '' ,'' , 2000).then((data) => {
             let latestTweets = [];
 
             if (data.rows) {
-                data.rows.map(d => {
+                const sortedData = data.rows.reverse();
+                sortedData.map(d => {
                     return latestTweets.push({author : d.author, content : d.content, created : new Date(d.created * 1000).toDateString()});
                 });
             }
