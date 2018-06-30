@@ -4,10 +4,10 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import HomeIcon from '@material-ui/icons/Home';
 import { NavLink } from 'react-router-dom';
 import Routes from '../Routes';
 import * as Eos from 'eosjs';
-import logo from '../statics/logo.svg';
 import '../styles/App.scss';
 import { withRoot } from '../contexts/RootContext';
 
@@ -84,12 +84,13 @@ class App extends Component {
     return (
         <Router >
           <div className="App theme-dark">
-            <AppBar position="static">
+            <AppBar className="appBar" position="static">
               <Toolbar>
                 <IconButton
                       component={NavLink}
                       to="/"
                       color="inherit">
+                      <HomeIcon/>
                 </IconButton>
                 {
                   !this.state.id &&

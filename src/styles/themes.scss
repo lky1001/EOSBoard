@@ -1,6 +1,7 @@
 $themes: (
   light: (
     backgroundColor: white,
+    subBackgroundColor : white,
     textColor: #408bbd,
     buttonTextColor: #408bbd,
     buttonTextTransform: none,
@@ -9,9 +10,11 @@ $themes: (
     buttonBorder: 2px solid #408bbd,
   ),
   dark: (
-    backgroundColor: #222,
-    backgroundHoverColor : yellow,
+    backgroundColor: #424242,
+    subBackgroundColor : #EEEEEE,
+    backgroundHoverColor : #616161,
     textColor: #ddd,
+    subTextColor : #424242,
     buttonTextColor: #aaa,
     buttonTextTransform: uppercase,
     buttonTextHoverColor: #ddd,
