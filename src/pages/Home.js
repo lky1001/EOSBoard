@@ -102,7 +102,7 @@ class Home extends Component {
                     <Grid container spacing={24}>
                         <Grid item xs={12} sm={6} md={8}>
                             <main>
-                                <FeedList newFeeds={newsfeed}/>
+                                <FeedList newsfeed={newsfeed}/>
                                     {
                                         this.state.isLoading &&
                                         <CircularProgress size={50} />
