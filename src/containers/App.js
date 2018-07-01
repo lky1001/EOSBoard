@@ -63,6 +63,13 @@ class App extends Component {
                       Welcome {accountName}!
                   </Typography>    
                 }
+                <div className="app-title-layout">
+                  <div>
+                    <a href="https://github.com/lky1001/EOSBoard" color="inherit" className="github-link" target="_blank">
+                      GITHUB
+                    </a>
+                  </div>
+                </div>
               </Toolbar>
             </AppBar>
 
