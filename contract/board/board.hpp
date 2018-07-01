@@ -11,13 +11,13 @@ public:
 
     board(account_name self) : contract(self) {}
     
-    void list(uint64_t _page);
+    void list(const uint64_t _page);
 
-    void write(account_name author, string title, string content);
+    void write(const account_name author, const string title, const string content);
 
-    void read(uint64_t _id);
+    void read(const uint64_t _id);
 
-    void remove(uint64_t _id);
+    void remove(const uint64_t _id);
 private:
     static uint64_t _id;
 

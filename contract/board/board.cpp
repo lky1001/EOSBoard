@@ -1,10 +1,10 @@
 #include "board.hpp"
 
-void board::list(uint64_t page) {
+void board::list(const uint64_t page) {
 
 }
 
-void board::write(account_name author, string title, string content) {
+void board::write(const account_name author, const string title, const string content) {
     require_auth(author);
     
     contents content_table(_self, _self);
@@ -25,10 +25,17 @@ void board::write(account_name author, string title, string content) {
     store_id_sequence(seq);
 }
 
-void board::read(uint64_t _id) {
+void board::read(const uint64_t _id) {
 
 }
 
-void board::remove(uint64_t _id) {
+void board::remove(const uint64_t _id) {
+    contents content_table(_self, _self);
 
+    auto iter = contents.find(_id);
+    eosio_assert(iter != contents.end(), "Counld not found");
+
+    require_auth(iter->author);
+
+    contents.erase(iter);
 }
