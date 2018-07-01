@@ -22,7 +22,7 @@ const FeedList = ({newsfeed}) => {
 }
 
 FeedList.defaultProps = {
-    newsFeed : []
+    newsfeed : []
 }
 
 export default FeedList;

@@ -9,27 +9,38 @@ const { Provider, Consumer: RootConsumer } = Context;
 const MAX_BOUND = "10000000000000000000";
 const MAX_LIMIT = "10000000000000000000";
 const PAGE_LIMIT = 20;
-const CONTRACT_NAME = "board";
-const TABLE_NAME = "mcontent";
+
+const protocol = 'http';
+const host = '127.0.0.1';
+const port = 8888;
+const chainId = 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f';
+
+const CONTRACT_NAME = 'board';
+const TABLE_NAME = 'mcontent';
 
 const requiredFields = {
     accounts:[
-        {blockchain:'eos', host:'127.0.0.1', port:8888, chainId:'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'}
+        {
+            blockchain:'eos', 
+            host: host, 
+            port: port, 
+            chainId: chainId
+        }
     ]
 };
 
 const NETWORK = {
-    protocol:'http',
     blockchain: 'eos',
-    host: '127.0.0.1',
-    port: '8888',
-    chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
+    protocol: protocol,
+    host: host,
+    port: port,
+    chainId: chainId
 };
 
 const CONFIG = {
     broadcast: true,
     sign: true,
-    chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
+    chainId: chainId
 };
 
 class RootProvider extends Component {
