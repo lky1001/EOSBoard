@@ -38,6 +38,11 @@ aside{
     display: flex;
     height:56px;
     margin:32px;
+
+    input {
+        height: 56px !important;
+        padding: 0px 12px !important;
+    }
 }
 
 .newsfeedHeader {

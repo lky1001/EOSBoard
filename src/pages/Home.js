@@ -80,6 +80,7 @@ class Home extends Component {
                     <Paper className="writingFeedPaper">
                         <TextField
                             fullWidth
+                            placeholder="What's on your mind?"
                             value={msg}
                             onChange={this.handleChange('msg')}
                             InputProps={{
@@ -87,7 +88,7 @@ class Home extends Component {
                             }}
                         />
                         <Button variant="contained" color="primary" className="postBtn" onClick={this.handlePostFeed}>
-                            Feed
+                            Post
                         </Button>
                         
                     </Paper>
