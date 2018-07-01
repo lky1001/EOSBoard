@@ -18,7 +18,7 @@ const Feed = (props) => {
                 </Avatar>
             </ListItemAvatar>
             <ListItemText primary={author} secondary={content}/>
-            <ListItemText primary={created} />
+            <ListItemText secondary={created} style={{textAlign: "right"}}/>
         </ListItem>
         <Divider/>
     </Fragment>
