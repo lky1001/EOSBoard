@@ -36,7 +36,7 @@ class RootProvider extends Component {
 
             if (this.scatter) {
                 this.eos = this.scatter.eos(NETWORK, Eos, CONFIG);            
-                this.actions.loadLastPost();
+                this.actions.loadNewsFeed();
             }
         });
     }
@@ -44,7 +44,7 @@ class RootProvider extends Component {
     state = {
         identity: null,
         accountName: '',
-        posts: []
+        newsfeed: []
     }
 
     actions = {
@@ -84,7 +84,7 @@ class RootProvider extends Component {
             return this.scatter && !!this.scatter.identity;
         },
 
-        loadLastPost: async () => {
+        loadNewsFeed: async () => {
             let data = await this.eos.getTableRows(true, CONTRACT_NAME, CONTRACT_NAME, TABLE_NAME, '', '' ,'' , 2000);
             
             let results = [];
@@ -98,11 +98,11 @@ class RootProvider extends Component {
             }
 
             this.setState({
-                posts : results
+                newsfeed : results
             })
         },
 
-        doPost: async (title, msg) => {
+        postFeed: async (title, msg) => {
             if (this.scatter && this.scatter.identity) {
                 const account = this.scatter.identity.accounts.find(acc => acc.blockchain === NETWORK.blockchain);
                 const options = {authorization: [`${account.name}@${account.authority}`]};
@@ -134,12 +134,12 @@ function withRoot(WrappedComponent) {
                     <WrappedComponent
                         identity={state.identity}
                         accountName={state.accountName}
-                        posts={state.posts}
+                        newsfeed={state.newsfeed}
                         login={actions.login}
                         logout={actions.logout}
                         isLoggedIn={actions.isLoggedIn}
-                        loadLastPost={actions.loadLastPost}
-                        doPost={actions.doPost}
+                        loadNewsFeed={actions.loadNewsFeed}
+                        postFeed={actions.postFeed}
                     />
                 )
             }

@@ -14,22 +14,6 @@ import ExtIcon from '@material-ui/icons/Extension';
 import "../styles/Home.scss";
 import { withRoot } from '../contexts/RootContext';
 
-const CONTRACT_NAME = "board";
-const TABLE_NAME = "mcontent";
-const NETWORK = {
-    protocol:'http',
-    blockchain: 'eos',
-    host: '127.0.0.1',
-    port: '8888',
-    chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f'
-};
-
-const CONFIG = {
-    broadcast: true,
-    sign: true,
-    chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
-};
-
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -40,18 +24,18 @@ class Home extends Component {
         };
     }
 
-    handlePost = async() => {
+    handlePostFeed = async() => {
         const { msg } = this.state;
-        const { doPost, loadLastPost } = this.props;
+        const { postFeed, loadNewsFeed } = this.props;
 
-        const result = await doPost('', msg);
+        const result = await postFeed('', msg);
         console.log(result);
 
         this.setState({
             msg : ''
         });
 
-        loadLastPost();        
+        loadNewsFeed();        
     }
 
     handleChange = name => event => {
@@ -69,7 +53,7 @@ class Home extends Component {
 
     render(){
         const { msg } = this.state;
-        const { posts } = this.props;
+        const { newsfeed } = this.props;
         
         return  (
             <div className="root">
@@ -102,15 +86,15 @@ class Home extends Component {
                                 disableUnderline: true
                             }}
                         />
-                        <Button variant="contained" color="primary" className="postBtn" onClick={this.handlePost}>
-                            Post
+                        <Button variant="contained" color="primary" className="postBtn" onClick={this.handlePostFeed}>
+                            Feed
                         </Button>
                         
                     </Paper>
                     <Grid container spacing={24}>
                         <Grid item xs={12} sm={6} md={8}>
                             <main>
-                                <FeedList newsfeed={posts}/>
+                                <FeedList newsfeed={newsfeed}/>
                             </main>
                         </Grid>
 
