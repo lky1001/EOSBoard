@@ -8,6 +8,7 @@ import FeedList from '../components/FeedList';
 import FeedChart from '../components/FeedChart';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import QnAIcon from '@material-ui/icons/QuestionAnswer';
 import ExtIcon from '@material-ui/icons/Extension';
@@ -20,7 +21,8 @@ class Home extends Component {
         
         this.state = {
             msg : '',
-            navIndex : 0
+            navIndex : 0,
+            isLoading : false
         };
     }
 
@@ -45,15 +47,20 @@ class Home extends Component {
     };
 
     handleNavChange = (event, value) => {
-        console.log(value);
         this.setState({
             navIndex : value
         })
     }
 
+    initialLoadFeeds = async() => {
+        const { loadLatestFeeds } = this.props;
+        const result = await loadLatestFeeds();
+    }
+
     render(){
-        const { msg } = this.state;
-        const { newsfeed } = this.props;
+        const { msg, isLoading } = this.state;
+        const { scatterInitialized, newsfeed } = this.props;
+        scatterInitialized && this.initialLoadFeeds();
         
         return  (
             <div className="root">
@@ -95,7 +102,11 @@ class Home extends Component {
                     <Grid container spacing={24}>
                         <Grid item xs={12} sm={6} md={8}>
                             <main>
-                                <FeedList newsfeed={newsfeed}/>
+                                <FeedList newFeeds={newsfeed}/>
+                                    {
+                                        this.state.isLoading &&
+                                        <CircularProgress size={50} />
+                                    }
                             </main>
                         </Grid>
 

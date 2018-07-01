@@ -11,13 +11,18 @@ const FeedList = ({newsfeed}) => {
         </div>
         <List component="nav">
             {
+                newsfeed &&
                 newsfeed.map((feed, index) => {
-                    return <Feed author={feed.author} content={feed.content} created={feed.created} key={index}/>
+                        return <Feed author={feed.author} content={feed.content} created={feed.created} key={index}/>
                 })
             }
         </List>
     </Paper>
   );
+}
+
+FeedList.defaultProps = {
+    newsFeed : []
 }
 
 export default FeedList;

@@ -1,9 +1,14 @@
 import React, { Component, createContext } from 'react';
 import * as Eos from 'eosjs';
+import * as EosFormat from 'eosjs/lib/format';
+import { BigNumber } from 'bignumber.js';
 
 const Context = createContext(); 
 const { Provider, Consumer: RootConsumer } = Context; 
 
+const MAX_BOUND = "10000000000000000000";
+const MAX_LIMIT = "10000000000000000000";
+const PAGE_LIMIT = 20;
 const CONTRACT_NAME = "board";
 const TABLE_NAME = "mcontent";
 
@@ -32,16 +37,34 @@ class RootProvider extends Component {
         super(props);
 
         document.addEventListener('scatterLoaded', scatterExtension => {
+            console.log('scatterloaded');
             this.scatter = window.scatter;
 
             if (this.scatter) {
-                this.eos = this.scatter.eos(NETWORK, Eos, CONFIG);            
-                this.actions.loadNewsFeed();
+                this.eos = this.scatter.eos(NETWORK, Eos, CONFIG);
+
+                console.log('스캐터 초기화 직전!');
+                this.handleHm();
+                //this.handleInitialLoad();
+                //this.actions.loadNewsFeed();
             }
         });
     }
 
+    handleHm = () =>{
+        console.log("오 초기화 할거야1");
+        this.setState({
+            scatterInitialized : true
+        })
+    }
+    // handleInitialLoad = async() =>{
+    //     const result = await this.actions.loadLatestFeeds();
+
+    //     console.log(result);
+    // }
+
     state = {
+        scatterInitialized : false,
         identity: null,
         accountName: '',
         newsfeed: []
@@ -102,6 +125,49 @@ class RootProvider extends Component {
             })
         },
 
+        loadLatestFeeds : () =>{
+            const { accountName } = this.state;
+            const table_key = new BigNumber(EosFormat.encodeName(accountName, false))
+    
+            return new Promise((resolve, reject) => {
+                    this.eos.getTableRows(
+                    {
+                        json: true, 
+                        code: CONTRACT_NAME, 
+                        scope: CONTRACT_NAME, 
+                        table: TABLE_NAME, 
+                        table_key: table_key, 
+                        upper_bound: MAX_BOUND,
+                        limit : MAX_LIMIT})
+                        .then((data) => {
+                            let newFeeds = [];
+                            
+                            if (data.rows && data.rows.length > 0) {
+                                const sortedData = data.rows.reverse();
+                                const latestFeeds = sortedData.slice(0, PAGE_LIMIT);
+                                latestFeeds.map(d => {
+                                    return newFeeds.push(
+                                        {
+                                            id : d._id,
+                                            author : d.author, 
+                                            content : d.content, 
+                                            created : new Date(d.created * 1000).toDateString()
+                                        });
+                                });
+                            }
+                            
+                            return newFeeds;
+                        })
+                        .then((result) => {
+                            resolve(result);
+                        })
+                        .catch(err => {
+                            reject(err);
+                        });
+                    }
+                );
+            },
+
         postFeed: async (title, msg) => {
             if (this.scatter && this.scatter.identity) {
                 const account = this.scatter.identity.accounts.find(acc => acc.blockchain === NETWORK.blockchain);
@@ -134,12 +200,14 @@ function withRoot(WrappedComponent) {
                     <WrappedComponent
                         identity={state.identity}
                         accountName={state.accountName}
+                        scatterInitialized={state.scatterInitialized}
                         newsfeed={state.newsfeed}
                         login={actions.login}
                         logout={actions.logout}
                         isLoggedIn={actions.isLoggedIn}
                         loadNewsFeed={actions.loadNewsFeed}
                         postFeed={actions.postFeed}
+                        loadLatestFeeds={actions.loadLatestFeeds}
                     />
                 )
             }
@@ -147,7 +215,7 @@ function withRoot(WrappedComponent) {
         )
     }
   }
-  
+
   export {
     RootProvider,
     RootConsumer,
