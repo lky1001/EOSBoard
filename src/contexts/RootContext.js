@@ -136,24 +136,6 @@ class RootProvider extends Component {
             return this.scatter && !!this.scatter.identity;
         },
 
-        loadNewsFeed: async () => {
-            let data = await this.eos.getTableRows(true, CONTRACT_NAME, CONTRACT_NAME, TABLE_NAME, '', '' ,'' , 2000);
-            
-            let results = [];
-
-            if (data.rows) {
-                const sortedData = data.rows.reverse();
-
-                sortedData.map(d => {
-                    return results.push({author : d.author, content : d.content, created : new Date(d.created * 1000).toDateString()});
-                });
-            }
-
-            this.setState({
-                newsfeed : results
-            })
-        },
-
         loadLatestFeeds : () =>{
             const { accountName } = this.state;
             const table_key = new BigNumber(EosFormat.encodeName(accountName, false))
