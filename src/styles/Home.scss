@@ -73,6 +73,13 @@ aside{
     };
   }
 
+.post-btn{
+    @include themify($themes) {
+        color: themed('textColor');  
+        background-color: themed('buttonColor');  
+    }
+}
+
 .tweetBtn {
     @include themify($themes) {
       color: themed('textColor');  

@@ -141,7 +141,7 @@ class Home extends Component {
                                 disableUnderline: true
                             }}
                         />
-                        <Button variant="contained" color="primary" className="postBtn" onClick={this.handlePostFeed}>
+                        <Button variant="contained" className="post-btn" onClick={this.handlePostFeed}>
                             Post
                         </Button>
                         
