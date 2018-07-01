@@ -66,10 +66,11 @@ class RootProvider extends Component {
     }
 
     _handleScatterInitialized = async() =>{
-        const { loadLatestFeeds, notifyFeedsUpdated } = this.actions;
+        const { checkLoginState, loadLatestFeeds, notifyFeedsUpdated } = this.actions;
 
         try
         {
+            await checkLoginState();
             const result = await loadLatestFeeds();
             const resultLength = result.length;
             const nextUpperBound = (result && resultLength > 0 ? result[resultLength - 1].id : 0);
@@ -109,6 +110,24 @@ class RootProvider extends Component {
                 this.setState({
                     identity: null,
                     accountName: ''
+                });
+            }
+        },
+
+        checkLoginState: async () => {
+            let isLoggedIn = this.scatter && !!this.scatter.identity;
+
+            if (!isLoggedIn) {
+                this.setState({
+                    identity: null,
+                    accountName: ''
+                });
+            } else {
+                const accountName = this.scatter.identity.accounts.find(acc => acc.blockchain === NETWORK.blockchain);
+
+                this.setState({
+                    identity: this.scatter.identity,
+                    accountName: accountName.name
                 });
             }
         },
@@ -311,6 +330,7 @@ function withRoot(WrappedComponent) {
                         login={actions.login}
                         logout={actions.logout}
                         isLoggedIn={actions.isLoggedIn}
+                        checkLoginState={actions.checkLoginState}
                         loadNewsFeed={actions.loadNewsFeed}
                         postFeed={actions.postFeed}
                         loadLatestFeeds={actions.loadLatestFeeds}

@@ -65,7 +65,7 @@ class App extends Component {
                 }
                 <div className="app-title-layout">
                   <div>
-                    <a href="https://github.com/lky1001/EOSBoard" color="inherit" className="github-link" target="_blank">
+                    <a href="https://github.com/lky1001/EOSBoard" color="inherit" className="github-link" target="_blank" rel="noopener noreferrer">
                       GITHUB
                     </a>
                   </div>
