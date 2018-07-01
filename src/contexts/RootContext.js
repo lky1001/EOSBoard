@@ -42,34 +42,33 @@ class RootProvider extends Component {
 
             if (this.scatter) {
                 this.eos = this.scatter.eos(NETWORK, Eos, CONFIG);
-
-                console.log('스캐터 초기화 직전!');
-                this.handleHm();
-                //this.handleInitialLoad();
-                //this.actions.loadNewsFeed();
+                this._handleScatterInitialized();
             }
         });
     }
 
-    handleHm = () =>{
-        console.log("오 초기화 할거야1");
-        this.setState({
-            scatterInitialized : true
-        })
-    }
-    // handleInitialLoad = async() =>{
-    //     const result = await this.actions.loadLatestFeeds();
-
-    //     console.log(result);
-    // }
-
     state = {
-        scatterInitialized : false,
         identity: null,
         accountName: '',
-        newsfeed: []
+        newsfeed: [], 
+        nextUpperBound : 0
     }
 
+    _handleScatterInitialized = async() =>{
+        const { loadLatestFeeds, notifyFeedsUpdated } = this.actions;
+
+        try
+        {
+            const result = await loadLatestFeeds();
+            const resultLength = result.length;
+            const nextUpperBound = (result && resultLength > 0 ? result[resultLength - 1].id : 0);
+            notifyFeedsUpdated(result, nextUpperBound);
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+   
     actions = {
         login: async () => {
             if (this.scatter) {
@@ -168,6 +167,102 @@ class RootProvider extends Component {
                 );
             },
 
+            loadMoreFeeds : () =>{
+                const { nextUpperBound, accountName } = this.state;
+                const nextLowerBound = Math.max(nextUpperBound - PAGE_LIMIT, 0);
+                const table_key = new BigNumber(EosFormat.encodeName(accountName, false));
+
+                return new Promise((resolve, reject) => {
+                    this.eos.getTableRows(
+                        {
+                            json: true, 
+                            code: CONTRACT_NAME, 
+                            scope: CONTRACT_NAME, 
+                            table: TABLE_NAME, 
+                            table_key: table_key, 
+                            lower_bound : nextLowerBound,
+                            upper_bound: nextUpperBound,
+                            limit : PAGE_LIMIT})
+                            .then((data) => {
+                                let moreFeeds = [];
+                                if (data.rows) {
+                                    const sortedData = data.rows.reverse();
+                                    sortedData.map(d => {
+                                        return moreFeeds.push(
+                                            {
+                                                id : d._id,
+                                                author : d.author, 
+                                                content : d.content, 
+                                                created : new Date(d.created * 1000).toDateString()
+                                            });
+                                    });
+                                }
+                                
+                            return moreFeeds;
+                        })
+                        .then((result) => {
+                            resolve(result);
+                        })
+                        .catch(err => {
+                            reject(err);
+                        });
+                  });
+            },
+
+            loadBetweenLatestAndCurrentFeed : () =>{
+                const { newsfeed, accountName } = this.state;
+                const table_key = new BigNumber(EosFormat.encodeName(accountName, false))
+                const latestFeed = newsfeed[0];
+                let lowerBound = 0;
+    
+                if(latestFeed !== undefined){
+                    lowerBound = latestFeed.id + 1;
+                }
+                
+                this.eos.getTableRows(
+                {
+                    json: true, 
+                    code: CONTRACT_NAME, 
+                    scope: CONTRACT_NAME, 
+                    table: TABLE_NAME, 
+                    table_key: table_key, 
+                    lower_bound: lowerBound,
+                    upper_bound: MAX_BOUND,
+                    limit : MAX_LIMIT})
+                    .then((data) => {
+                        if (data.rows && data.rows.length > 0) {
+                            let newFeeds = [];
+                            const sortedData = data.rows.reverse();
+    
+                            sortedData.map(d => {
+                                return newFeeds.push(
+                                    {
+                                        id : d._id,
+                                        author : d.author, 
+                                        content : d.content, 
+                                        created : new Date(d.created * 1000).toDateString()
+                                    });
+                            });
+    
+                            this.setState({
+                                newsfeed : [
+                                    ...newFeeds,
+                                    ...newsfeed
+                                ]
+                            });
+                        }
+                    }
+                )
+            },
+
+        notifyFeedsUpdated : (newFeeds, nextUpperBound) => {
+            console.log(newFeeds);
+            this.setState({
+                newsfeed : newFeeds,
+                nextUpperBound
+            })
+        },
+
         postFeed: async (title, msg) => {
             if (this.scatter && this.scatter.identity) {
                 const account = this.scatter.identity.accounts.find(acc => acc.blockchain === NETWORK.blockchain);
@@ -200,7 +295,7 @@ function withRoot(WrappedComponent) {
                     <WrappedComponent
                         identity={state.identity}
                         accountName={state.accountName}
-                        scatterInitialized={state.scatterInitialized}
+                        nextUpperBound={state.nextUpperBound}
                         newsfeed={state.newsfeed}
                         login={actions.login}
                         logout={actions.logout}
@@ -208,6 +303,9 @@ function withRoot(WrappedComponent) {
                         loadNewsFeed={actions.loadNewsFeed}
                         postFeed={actions.postFeed}
                         loadLatestFeeds={actions.loadLatestFeeds}
+                        loadMoreFeeds={actions.loadMoreFeeds}
+                        loadBetweenLatestAndCurrentFeed={actions.loadBetweenLatestAndCurrentFeed}
+                        notifyFeedsUpdated={actions.notifyFeedsUpdated}
                     />
                 )
             }

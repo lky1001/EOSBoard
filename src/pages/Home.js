@@ -28,7 +28,7 @@ class Home extends Component {
 
     handlePostFeed = async() => {
         const { msg } = this.state;
-        const { postFeed, loadNewsFeed } = this.props;
+        const { postFeed, loadBetweenLatestAndCurrentFeed } = this.props;
 
         const result = await postFeed('', msg);
         console.log(result);
@@ -37,7 +37,7 @@ class Home extends Component {
             msg : ''
         });
 
-        loadNewsFeed();        
+        loadBetweenLatestAndCurrentFeed();        
     }
 
     handleChange = name => event => {
@@ -52,15 +52,45 @@ class Home extends Component {
         })
     }
 
-    initialLoadFeeds = async() => {
-        const { loadLatestFeeds } = this.props;
-        const result = await loadLatestFeeds();
+    handleScroll = async() => {
+        const { isLoading } = this.state;
+        const { newsfeed, loadMoreFeeds, notifyFeedsUpdated, nextUpperBound } = this.props;
+
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isLoading) {
+            if(nextUpperBound <= 0) return;
+
+            try
+            {
+                this.setState({
+                    isLoading : true
+                })
+
+                const result = await loadMoreFeeds();
+                const resultLength = result.length;
+                const nextUpperBound = (result && resultLength > 0 ? result[resultLength - 1].id : 0);
+                const newResult = [...newsfeed, ...result];
+
+                notifyFeedsUpdated(newResult, nextUpperBound);
+
+            }catch(err){
+                console.log(err);
+            }
+            finally{
+                this.setState({
+                    isLoading : false
+                })
+            }
+            
+        }
+    }
+
+    componentDidMount = () => {
+        window.addEventListener('scroll', this.handleScroll);
     }
 
     render(){
         const { msg, isLoading } = this.state;
-        const { scatterInitialized, newsfeed } = this.props;
-        scatterInitialized && this.initialLoadFeeds();
+        const { newsfeed } = this.props;
         
         return  (
             <div className="root">
@@ -102,9 +132,9 @@ class Home extends Component {
                     <Grid container spacing={24}>
                         <Grid item xs={12} sm={6} md={8}>
                             <main>
-                                <FeedList newFeeds={newsfeed}/>
+                                <FeedList newsfeed={newsfeed}/>
                                     {
-                                        this.state.isLoading &&
+                                        isLoading &&
                                         <CircularProgress size={50} />
                                     }
                             </main>
