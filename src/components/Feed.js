@@ -6,7 +6,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import PersonIcon from '@material-ui/icons/Person';
 
-const Tweet = (props) => {
+const Feed = (props) => {
     const {author, content, created} = props;
 
   return (
@@ -25,4 +25,4 @@ const Tweet = (props) => {
   );
 }
 
-export default Tweet;
+export default Feed;

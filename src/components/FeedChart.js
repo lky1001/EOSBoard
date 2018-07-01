@@ -33,7 +33,7 @@ const yScale = scaleLinear({
   domain: [0, max(data, y)],
 });
 
-class TweetChart extends Component {
+class FeedChart extends Component {
     render(){
         return(
             <svg width={width} height={height}>
@@ -48,7 +48,7 @@ class TweetChart extends Component {
                     scale={yScale}
                     top={0}
                     left={0}
-                    label={'Tweet per min'}
+                    label={'Feed per min'}
                     stroke={'#1b1a1e'}
                     tickTextFill={'#1b1a1e'}
                     />
@@ -74,4 +74,4 @@ class TweetChart extends Component {
     }
 }
 
-export default TweetChart;
+export default FeedChart;

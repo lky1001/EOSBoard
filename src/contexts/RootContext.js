@@ -36,6 +36,7 @@ class RootProvider extends Component {
 
             if (this.scatter) {
                 this.eos = this.scatter.eos(NETWORK, Eos, CONFIG);            
+                this.actions.loadLastPost();
             }
         });
     }
