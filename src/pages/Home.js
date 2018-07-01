@@ -26,6 +26,27 @@ class Home extends Component {
         };
     }
 
+    componentDidMount = () => {
+        window.addEventListener('scroll', this.handleScroll);
+
+        this.interval = setInterval(() => {
+            const { loadBetweenLatestAndCurrentFeed } = this.props;
+
+            loadBetweenLatestAndCurrentFeed();
+        }, 10000);
+
+        this.loginCheck = setInterval(() => {
+            const { checkLoginState } = this.props;
+
+            checkLoginState();
+        }, 10000);
+    }
+
+    componentWillUnmount = () => {
+        clearInterval(this.interval);
+        clearInterval(this.loginCheck);
+    }
+
     handlePostFeed = async() => {
         const { msg } = this.state;
         const { postFeed, loadBetweenLatestAndCurrentFeed } = this.props;
@@ -37,7 +58,7 @@ class Home extends Component {
             msg : ''
         });
 
-        loadBetweenLatestAndCurrentFeed();        
+        loadBetweenLatestAndCurrentFeed();
     }
 
     handleChange = name => event => {
@@ -84,11 +105,7 @@ class Home extends Component {
         }
     }
 
-    componentDidMount = () => {
-        window.addEventListener('scroll', this.handleScroll);
-    }
-
-    render(){
+    render() {
         const { msg, isLoading } = this.state;
         const { newsfeed } = this.props;
         
