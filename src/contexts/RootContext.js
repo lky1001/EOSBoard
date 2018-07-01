@@ -42,7 +42,8 @@ class RootProvider extends Component {
 
     state = {
         identity: null,
-        accountName: ''
+        accountName: '',
+        posts: []
     }
 
     actions = {
@@ -77,6 +78,38 @@ class RootProvider extends Component {
                 });
             }
         },
+
+        isLoggedIn: () => {
+            return this.scatter && !!this.scatter.identity;
+        },
+
+        loadLastPost: async () => {
+            let data = await this.eos.getTableRows(true, CONTRACT_NAME, CONTRACT_NAME, TABLE_NAME, '', '' ,'' , 2000);
+            
+            let results = [];
+
+            if (data.rows) {
+                const sortedData = data.rows.reverse();
+
+                sortedData.map(d => {
+                    return results.push({author : d.author, content : d.content, created : new Date(d.created * 1000).toDateString()});
+                });
+            }
+
+            this.setState({
+                posts : results
+            })
+        },
+
+        doPost: async (title, msg) => {
+            if (this.scatter && this.scatter.identity) {
+                const account = this.scatter.identity.accounts.find(acc => acc.blockchain === NETWORK.blockchain);
+                const options = {authorization: [`${account.name}@${account.authority}`]};
+                return this.eos.contract(CONTRACT_NAME).then(contract => contract.write(account.name, title, msg, options));
+            }
+
+            return false;
+        },
     }
 
     render() {
@@ -100,8 +133,12 @@ function withRoot(WrappedComponent) {
                     <WrappedComponent
                         identity={state.identity}
                         accountName={state.accountName}
+                        posts={state.posts}
                         login={actions.login}
                         logout={actions.logout}
+                        isLoggedIn={actions.isLoggedIn}
+                        loadLastPost={actions.loadLastPost}
+                        doPost={actions.doPost}
                     />
                 )
             }
