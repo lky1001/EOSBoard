@@ -112,19 +112,19 @@ class Home extends Component {
         return  (
             <div className="root">
                 <header className="header">
-                    <BottomNavigation className="nav"
+                    {/* <BottomNavigation className="nav"
                         onChange={this.handleNavChange}
                         showLabels>
                         <BottomNavigationAction label="Dashboard" icon={<DashboardIcon />} />
                         <BottomNavigationAction label="History" icon={<QnAIcon />} />
                         <BottomNavigationAction label="Settings" icon={<ExtIcon />} />
-                    </BottomNavigation>
+                    </BottomNavigation> */}
 
-                    <div className="headlineRegion">
-                        <Typography variant="display4">
+                    <div className="headlineRegion" style={{margin: "35px"}}>
+                        <Typography variant="display3">
                             FACEOS
                         </Typography>
-                        <Typography variant="display2">
+                        <Typography variant="display1">
                             Say hello to the news feed.
                         </Typography>
                     </div>
