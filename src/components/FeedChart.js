@@ -6,6 +6,9 @@ import { AreaClosed } from '@vx/shape';
 import { Group } from '@vx/group';
 import { AxisLeft, AxisBottom } from '@vx/axis';
 import { LinearGradient } from '@vx/gradient';
+import Fade from '@material-ui/core/Fade';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Paper from '@material-ui/core/Paper';
 
 const data = appleStock;
 const width = 750;
@@ -35,41 +38,63 @@ const yScale = scaleLinear({
 
 class FeedChart extends Component {
     render(){
-        return(
-            <svg width={width} height={height}>
-                <Group top={margin.top} left={margin.left}>
-                    <LinearGradient
-                        from='#fbc2eb'
-                        to='#a6c1ee'
-                        id='gradient'
-                    />
+        const { isInitialized, isLoading } = this.props;
+        const loading = !isInitialized || isLoading;
 
-                    <AxisLeft
-                    scale={yScale}
-                    top={0}
-                    left={0}
-                    label={'Feed per min'}
-                    stroke={'#1b1a1e'}
-                    tickTextFill={'#1b1a1e'}
-                    />
-                    <AxisBottom
-                        scale={xScale}
-                        top={yMax}
-                        label={'Years'}
+        return(
+            <Paper className="paper">
+                <h3 className="newsfeedHeader">
+                    Status
+                </h3>
+
+                <div>
+                    <Fade   
+                        in={loading} 
+                        style={{
+                            transitionDelay: loading ? '800ms' : '0ms',
+                        }}
+                        unmountOnExit
+                    >
+                        <CircularProgress />
+                    </Fade>
+                </div>
+
+                {!loading &&
+                <svg width={width} height={height}>
+                    <Group top={margin.top} left={margin.left}>
+                        <LinearGradient
+                            from='#fbc2eb'
+                            to='#a6c1ee'
+                            id='gradient'
+                        />
+
+                        <AxisLeft
+                        scale={yScale}
+                        top={0}
+                        left={0}
+                        label={'Feed per min'}
                         stroke={'#1b1a1e'}
                         tickTextFill={'#1b1a1e'}
-                    />
-                    <AreaClosed
-                        data={data}
-                        xScale={xScale}
-                        yScale={yScale}
-                        x={x}
-                        y={y}
-                        fill={"url(#gradient)"}
-                        stroke={""}
-                    />
-                </Group>
-            </svg>
+                        />
+                        <AxisBottom
+                            scale={xScale}
+                            top={yMax}
+                            label={'Years'}
+                            stroke={'#1b1a1e'}
+                            tickTextFill={'#1b1a1e'}
+                        />
+                        <AreaClosed
+                            data={data}
+                            xScale={xScale}
+                            yScale={yScale}
+                            x={x}
+                            y={y}
+                            fill={"url(#gradient)"}
+                            stroke={""}
+                        />
+                    </Group>
+                </svg>}
+            </Paper>
         )
     }
 }

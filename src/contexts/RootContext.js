@@ -72,6 +72,7 @@ class RootProvider extends Component {
     }
 
     state = {
+        isInitialized : false,
         identity: null,
         accountName: '',
         newsfeed: [], 
@@ -91,6 +92,11 @@ class RootProvider extends Component {
         }
         catch(err){
             console.log(err);
+        }
+        finally{
+            this.setState({
+                isInitialized : true
+            })
         }
     }
    
@@ -318,6 +324,7 @@ function withRoot(WrappedComponent) {
             {
                 ({ state, actions }) => (
                     <WrappedComponent
+                        isInitialized={state.isInitialized}
                         identity={state.identity}
                         accountName={state.accountName}
                         nextUpperBound={state.nextUpperBound}
