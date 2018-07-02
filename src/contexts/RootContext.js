@@ -56,6 +56,19 @@ class RootProvider extends Component {
                 this._handleScatterInitialized();
             }
         });
+
+        const interval = setInterval(() => {
+            clearInterval(interval);
+
+            if (!this.eos) {
+                this.eos = Eos({
+                    httpEndpoint: protocol + "://" + host + ":" + port, 
+                    chainId: chainId
+                });
+
+                this._handleScatterInitialized();
+            }
+        }, 1000);
     }
 
     state = {
