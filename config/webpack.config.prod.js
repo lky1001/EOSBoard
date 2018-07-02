@@ -200,14 +200,16 @@ module.exports = {
                 loader: require.resolve('css-loader'),
                 options: {
                   importLoaders: 1,
+                  url: false,
                   minimize: true,
-                  sourceMap: true,
-                  modules: true,
-                  localIdentName: '[name]__[local]__[hash:base64:5]'
+                  sourceMap: true
                 }
               },
               {
                 loader: require.resolve('sass-loader'),
+                options: {
+                  sourceMap: true
+                }
               },
               {
                 loader: require.resolve('postcss-loader'),
@@ -311,7 +313,10 @@ module.exports = {
     }),
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
-      filename: cssFilename,
+      filename:  (getPath) => {
+        return getPath('css/[name].css').replace('css/js', 'css');
+      },
+      allChunks: true
     }),
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
