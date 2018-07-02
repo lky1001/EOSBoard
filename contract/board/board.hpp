@@ -24,7 +24,7 @@ private:
     struct id_sequence {
         id_sequence() {}
         constexpr static uint64_t key = N(id_sequence);
-        uint64_t _id = 2;
+        uint64_t _id = 1;
     };
 
     void store_id_sequence(const id_sequence &seq) {
