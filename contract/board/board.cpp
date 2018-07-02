@@ -32,10 +32,10 @@ void board::read(const uint64_t _id) {
 void board::remove(const uint64_t _id) {
     contents content_table(_self, _self);
 
-    auto iter = contents.find(_id);
-    eosio_assert(iter != contents.end(), "Counld not found");
+    auto iter = content_table.find(_id);
+    eosio_assert(iter != content_table.end(), "Counld not found");
 
     require_auth(iter->author);
 
-    contents.erase(iter);
+    content_table.erase(iter);
 }
