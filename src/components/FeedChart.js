@@ -10,7 +10,6 @@ import Fade from '@material-ui/core/Fade';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper';
 
-const data = appleStock;
 const width = 750;
 const height = 400;
 
@@ -23,23 +22,27 @@ const margin = {
 const xMax = width - margin.left - margin.right;
 const yMax = height - margin.top - margin.bottom;
 
-const x = d => new Date(d.date);
-const y = d => d.close;
-
-const xScale = scaleTime({
-  range: [0, xMax],
-  domain: extent(data, x)
-});
-
-const yScale = scaleLinear({
-  range: [yMax, 0],
-  domain: [0, max(data, y)],
-});
-
 class FeedChart extends Component {
+    handleScaleTime = (data, x) => scaleTime({
+        range: [0, xMax],
+        domain: extent(data, x)
+      });
+      
+    handleScaleLinear = (data, y) => scaleLinear({
+        range: [yMax, 0],
+        domain: [0, max(data, y)],
+    });
+
     render(){
-        const { isInitialized, isLoading } = this.props;
+        const { isInitialized, isLoading, chartData } = this.props;
         const loading = !isInitialized || isLoading;
+        const { handleScaleTime, handleScaleLinear} = this;
+
+         const x = d => { new Date(d.date);}
+         const y = d => d.value;
+
+         const xScale = handleScaleTime(chartData, x);
+         const yScale = handleScaleLinear(chartData, y);
 
         return(
             <Paper className="paper">
@@ -84,7 +87,7 @@ class FeedChart extends Component {
                             tickTextFill={'#1b1a1e'}
                         />
                         <AreaClosed
-                            data={data}
+                            data={chartData}
                             xScale={xScale}
                             yScale={yScale}
                             x={x}
@@ -97,6 +100,10 @@ class FeedChart extends Component {
             </Paper>
         )
     }
+}
+
+FeedChart.defaultProps = {
+    chartData : []
 }
 
 export default FeedChart;

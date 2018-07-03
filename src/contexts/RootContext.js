@@ -1,6 +1,7 @@
 import React, { Component, createContext } from 'react';
 import * as Eos from 'eosjs';
 import * as EosFormat from 'eosjs/lib/format';
+import _ from 'lodash';
 import { BigNumber } from 'bignumber.js';
 
 const Context = createContext(); 
@@ -10,12 +11,20 @@ const MAX_BOUND = "10000000000000000000";
 const MAX_LIMIT = "10000000000000000000";
 const PAGE_LIMIT = 20;
 
-const protocol = 'https';
-const host = 'nodes.get-scatter.com';
-const port = 443;
-const chainId = 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906';
+// const protocol = 'https';
+// const host = 'nodes.get-scatter.com';
+// const port = 443;
+// const chainId = 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906';
 
-const CONTRACT_NAME = 'faceostest12';
+// const CONTRACT_NAME = 'faceostest12';
+// const TABLE_NAME = 'mcontent';
+
+const protocol = 'http';
+const host = '127.0.0.1';
+const port = 8888;
+const chainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
+
+const CONTRACT_NAME = 'board';
 const TABLE_NAME = 'mcontent';
 
 const requiredFields = {
@@ -76,6 +85,7 @@ class RootProvider extends Component {
         identity: null,
         accountName: '',
         newsfeed: [], 
+        chartData: [],
         nextUpperBound : 0
     }
 
@@ -89,6 +99,7 @@ class RootProvider extends Component {
             const resultLength = result.length;
             const nextUpperBound = (result && resultLength > 0 ? result[resultLength - 1].id : 0);
             notifyFeedsUpdated(result, nextUpperBound);
+            this._analyzeChartStatus();
         }
         catch(err){
             console.log(err);
@@ -99,7 +110,40 @@ class RootProvider extends Component {
             })
         }
     }
-   
+
+    _analyzeChartStatus = () => {
+        const { newsfeed } = this.state;
+        const now = Date.now();
+        const aDay = (1000 * 60 * 60 * 24);
+        const twoWeeksAgo = now - (12 * aDay);
+
+        var byDay = {};
+        newsfeed.filter(feed => {
+            return (feed['created'] * 1000) >= twoWeeksAgo
+        })
+        .map(feed => {
+            let key = new Date(feed['created'] * 1000).toDateString();
+            const existDay = byDay[key];
+            if(existDay === undefined){
+                byDay[key] = 1;
+            }
+            else {
+                byDay[key] = existDay + 1;
+            }
+
+            return feed;
+        });
+
+        const chartData = []
+        for( var key in byDay ) {
+            chartData.push({date : new Date(key).toISOString(), value : byDay[key]});
+        }
+
+        this.setState({
+            chartData
+        });
+    }
+
     actions = {
         login: async () => {
             if (this.scatter) {
@@ -181,7 +225,7 @@ class RootProvider extends Component {
                                             id : d._id,
                                             author : d.author, 
                                             content : d.content, 
-                                            created : new Date(d.created * 1000).toDateString()
+                                            created : d.created
                                         });
                                 });
                             }
@@ -224,7 +268,7 @@ class RootProvider extends Component {
                                                 id : d._id,
                                                 author : d.author, 
                                                 content : d.content, 
-                                                created : new Date(d.created * 1000).toDateString()
+                                                created : d.created
                                             });
                                     });
                                 }
@@ -271,7 +315,7 @@ class RootProvider extends Component {
                                         id : d._id,
                                         author : d.author, 
                                         content : d.content, 
-                                        created : new Date(d.created * 1000).toDateString()
+                                        created : d.created
                                     });
                             });
     
@@ -287,7 +331,6 @@ class RootProvider extends Component {
             },
 
         notifyFeedsUpdated : (newFeeds, nextUpperBound) => {
-            console.log(newFeeds);
             this.setState({
                 newsfeed : newFeeds,
                 nextUpperBound
@@ -328,6 +371,7 @@ function withRoot(WrappedComponent) {
                         identity={state.identity}
                         accountName={state.accountName}
                         nextUpperBound={state.nextUpperBound}
+                        chartData={state.chartData}
                         newsfeed={state.newsfeed}
                         login={actions.login}
                         logout={actions.logout}

@@ -107,7 +107,7 @@ class Home extends Component {
 
     render() {
         const { msg, isLoading } = this.state;
-        const { newsfeed, isInitialized } = this.props;
+        const { newsfeed, isInitialized, chartData } = this.props;
         
         return  (
             <div className="root">
@@ -155,7 +155,7 @@ class Home extends Component {
 
                         <Grid item xs={12} sm={6} md={4}>
                             <aside>
-                                <FeedChart isInitialized={isInitialized} isLoading={isLoading}/>
+                                <FeedChart isInitialized={isInitialized} isLoading={isLoading} chartData={chartData}/>
                             </aside>
                         </Grid>
                     </Grid>
