@@ -24,8 +24,7 @@ const yMax = height - margin.top - margin.bottom;
 
 class FeedChart extends Component {
     render() {
-        const { isInitialized, isLoading, chartData } = this.props;
-        const loading = !isInitialized || isLoading;
+        const { isInitialized, chartData } = this.props;
 
         const x = d => new Date(d.date);
         const y = d => d.value;
@@ -48,9 +47,9 @@ class FeedChart extends Component {
 
                 <div>
                     <Fade   
-                        in={loading} 
+                        in={!isInitialized} 
                         style={{
-                            transitionDelay: loading ? '800ms' : '0ms',
+                            transitionDelay: !isInitialized ? '800ms' : '0ms',
                         }}
                         unmountOnExit
                     >
@@ -58,7 +57,7 @@ class FeedChart extends Component {
                     </Fade>
                 </div>
 
-                {!loading &&
+                {isInitialized &&
                 <svg width={width} height={height}>
                     <Group top={margin.top} left={margin.left}>
                         <LinearGradient

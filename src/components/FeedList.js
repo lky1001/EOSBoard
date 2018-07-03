@@ -7,8 +7,7 @@ import Feed from './Feed';
 
 class FeedList extends Component {
     render(){
-        const { newsfeed, isInitialized, isLoading } = this.props;
-        const loading = !isInitialized || isLoading;
+        const { newsfeed, isInitialized } = this.props;
 
         return (
             <Paper className="paper">
@@ -18,9 +17,9 @@ class FeedList extends Component {
         
                 <div>
                     <Fade   
-                        in={loading} 
+                        in={!isInitialized} 
                         style={{
-                            transitionDelay: loading ? '800ms' : '0ms',
+                            transitionDelay: !isInitialized ? '800ms' : '0ms',
                         }}
                         unmountOnExit
                     >
@@ -28,7 +27,7 @@ class FeedList extends Component {
                     </Fade>
                 </div>
 
-                {!loading &&
+                {isInitialized &&
                 <List component="nav">
                     {
                         newsfeed &&

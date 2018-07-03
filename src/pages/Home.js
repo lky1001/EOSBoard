@@ -12,6 +12,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import QnAIcon from '@material-ui/icons/QuestionAnswer';
 import ExtIcon from '@material-ui/icons/Extension';
+import Fade from '@material-ui/core/Fade';
 import "../styles/Home.scss";
 import { withRoot } from '../contexts/RootContext';
 
@@ -150,13 +151,24 @@ class Home extends Component {
                     <Grid container spacing={24}>
                         <Grid item xs={12} sm={6} md={8}>
                             <main>
-                                <FeedList newsfeed={newsfeed} isInitialized={isInitialized} isLoading={isLoading}/>
+                                <FeedList newsfeed={newsfeed} isInitialized={isInitialized}/>
+                                <div>
+                                    <Fade   
+                                        in={isLoading} 
+                                        style={{
+                                            transitionDelay: isLoading ? '800ms' : '0ms',
+                                        }}
+                                        unmountOnExit
+                                    >
+                                        <CircularProgress />
+                                    </Fade>
+                                </div>
                             </main>
                         </Grid>
 
                         <Grid item xs={12} sm={6} md={4}>
                             <aside>
-                                <FeedChart isInitialized={isInitialized} isLoading={isLoading} chartData={chartData}/>
+                                <FeedChart isInitialized={isInitialized} chartData={chartData}/>
                             </aside>
                         </Grid>
                     </Grid>
