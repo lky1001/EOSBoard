@@ -3,6 +3,7 @@ import * as Eos from 'eosjs';
 import * as EosFormat from 'eosjs/lib/format';
 import _ from 'lodash';
 import { BigNumber } from 'bignumber.js';
+import moment from 'moment';
 
 const Context = createContext(); 
 const { Provider, Consumer: RootConsumer } = Context; 
@@ -242,7 +243,7 @@ class RootProvider extends Component {
                                             id : d._id,
                                             author : d.author, 
                                             content : d.content, 
-                                            created : d.created
+                                            created : moment.unix(d.created).format('LLL')
                                         });
                                 });
                             }
@@ -285,7 +286,7 @@ class RootProvider extends Component {
                                                 id : d._id,
                                                 author : d.author, 
                                                 content : d.content, 
-                                                created : d.created
+                                                created : moment.unix(d.created).format('LLL')
                                             });
                                     });
                                 }
@@ -332,7 +333,7 @@ class RootProvider extends Component {
                                         id : d._id,
                                         author : d.author, 
                                         content : d.content, 
-                                        created : d.created
+                                        created : moment.unix(d.created).format('LLL')
                                     });
                             });
     
