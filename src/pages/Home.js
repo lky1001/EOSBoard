@@ -107,7 +107,7 @@ class Home extends Component {
 
     render() {
         const { msg, isLoading } = this.state;
-        const { newsfeed, isInitialized, chartData } = this.props;
+        const { newsfeed, isInitialized, chartData, identity } = this.props;
         
         return  (
             <div className="root">
@@ -137,11 +137,12 @@ class Home extends Component {
                             placeholder="What's on your mind?"
                             value={msg}
                             onChange={this.handleChange('msg')}
+                            disabled={!identity}
                             InputProps={{
                                 disableUnderline: true
                             }}
                         />
-                        <Button variant="contained" className="post-btn" onClick={this.handlePostFeed}>
+                        <Button variant="contained" className="post-btn" onClick={this.handlePostFeed} disabled={!identity}>
                             Post
                         </Button>
                         
