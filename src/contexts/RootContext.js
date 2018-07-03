@@ -1,7 +1,6 @@
 import React, { Component, createContext } from 'react';
 import * as Eos from 'eosjs';
 import * as EosFormat from 'eosjs/lib/format';
-import _ from 'lodash';
 import { BigNumber } from 'bignumber.js';
 import moment from 'moment';
 
@@ -19,6 +18,7 @@ const chainId = 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e90
 
 const CONTRACT_NAME = 'faceostest12';
 const TABLE_NAME = 'mcontent';
+const API_GET_INFO = "https://" + host + ":" + port + "/v1/chain/get_info";
 
 // const protocol = 'http';
 // const host = '127.0.0.1';
@@ -57,13 +57,14 @@ class RootProvider extends Component {
     constructor(props) {
         super(props);
 
+        
         document.addEventListener('scatterLoaded', scatterExtension => {
             console.log('scatterloaded');
             this.scatter = window.scatter;
 
             if (this.scatter) {
                 this.eos = this.scatter.eos(NETWORK, Eos, CONFIG);
-                this._handleScatterInitialized();
+                this._getEosChainInfo();
             }
         });
 
@@ -76,7 +77,7 @@ class RootProvider extends Component {
                     chainId: chainId
                 });
 
-                this._handleScatterInitialized();
+                this._getEosChainInfo();
             }
         }, 1000);
     }
@@ -87,7 +88,27 @@ class RootProvider extends Component {
         accountName: '',
         newsfeed: [], 
         chartData: [],
-        nextUpperBound : 0
+        nextUpperBound : 0,
+        head_block_time : null
+    }
+
+    _getEosChainInfo = () =>{
+        try
+        {
+            fetch(API_GET_INFO)  
+            .then(function(response) {
+                return response.json()
+            })
+            .then(data => {
+                this.setState({
+                    head_block_time : data["head_block_time"]
+                })
+
+                this._handleScatterInitialized();
+            })
+        }catch(err){
+            console.log(err);
+        }
     }
 
     _handleScatterInitialized = async() =>{
@@ -113,17 +134,18 @@ class RootProvider extends Component {
     }
 
     _analyzeChartStatus = () => {
-        const { newsfeed } = this.state;
-        const now = Date.now();
-        const aDay = (1000 * 60 * 60 * 24);
-        const twoWeeksAgo = now - (12 * aDay);
+        const { newsfeed, head_block_time } = this.state;
 
+        const eosLatestBlockTime = new Date(head_block_time);
+        eosLatestBlockTime.setDate(eosLatestBlockTime.getDate() - 7);
+        
         var byDay = {};
         newsfeed.filter(feed => {
-            return (feed['created'] * 1000) >= twoWeeksAgo
+            return new Date(feed['created']) >= eosLatestBlockTime
         })
         .map(feed => {
-            let key = new Date(feed['created'] * 1000).toDateString();
+            let key = new Date(feed['created']).toDateString();
+            
             const existDay = byDay[key];
             if(existDay === undefined){
                 byDay[key] = 1;
@@ -142,21 +164,7 @@ class RootProvider extends Component {
             chartData.push({date : new Date(key).toISOString(), value : byDay[key]});
         }
 
-        chartData.push({date: "2018-06-27T15:00:00.000Z", value : 0});
-        chartData.push({date: "2018-06-26T15:00:00.000Z", value : 0});
-        chartData.push({date: "2018-06-25T15:00:00.000Z", value : 0});
-        chartData.push({date: "2018-06-24T15:00:00.000Z", value : 0});
-        chartData.push({date: "2018-06-23T15:00:00.000Z", value : 0});
-
-        chartData.push({date: "2018-06-22T15:00:00.000Z", value : 0});
-        chartData.push({date: "2018-06-21T15:00:00.000Z", value : 0});
-        chartData.push({date: "2018-06-20T15:00:00.000Z", value : 0});
-        chartData.push({date: "2018-06-19T15:00:00.000Z", value : 0});
-        chartData.push({date: "2018-06-18T15:00:00.000Z", value : 0});
-        chartData.push({date: "2018-06-17T15:00:00.000Z", value : 0});
-        chartData.push({date: "2018-06-16T15:00:00.000Z", value : 0});
-        
-
+        //chartData.push({date: "2018-07-01T15:00:00.000Z", value : 2});
         this.setState({
             chartData
         });

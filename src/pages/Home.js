@@ -5,16 +5,11 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import FeedList from '../components/FeedList';
-import FeedChart from '../components/FeedChart';
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import QnAIcon from '@material-ui/icons/QuestionAnswer';
-import ExtIcon from '@material-ui/icons/Extension';
 import Fade from '@material-ui/core/Fade';
 import "../styles/Home.scss";
 import { withRoot } from '../contexts/RootContext';
+import AsideContainer from '../components/AsideContainer';
 
 class Home extends Component {
     constructor(props) {
@@ -113,14 +108,6 @@ class Home extends Component {
         return  (
             <div className="root">
                 <header className="header">
-                    {/* <BottomNavigation className="nav"
-                        onChange={this.handleNavChange}
-                        showLabels>
-                        <BottomNavigationAction label="Dashboard" icon={<DashboardIcon />} />
-                        <BottomNavigationAction label="History" icon={<QnAIcon />} />
-                        <BottomNavigationAction label="Settings" icon={<ExtIcon />} />
-                    </BottomNavigation> */}
-
                     <div className="headlineRegion" style={{margin: "35px"}}>
                         <Typography variant="display3">
                             FACEOS
@@ -168,7 +155,7 @@ class Home extends Component {
 
                         <Grid item xs={12} sm={6} md={4}>
                             <aside>
-                                <FeedChart isInitialized={isInitialized} chartData={chartData}/>
+                                <AsideContainer isInitialized={isInitialized} chartData={chartData}/>
                             </aside>
                         </Grid>
                     </Grid>
