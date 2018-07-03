@@ -135,9 +135,26 @@ class RootProvider extends Component {
         });
 
         const chartData = []
+
+
         for( var key in byDay ) {
             chartData.push({date : new Date(key).toISOString(), value : byDay[key]});
         }
+
+        chartData.push({date: "2018-06-27T15:00:00.000Z", value : 0});
+        chartData.push({date: "2018-06-26T15:00:00.000Z", value : 0});
+        chartData.push({date: "2018-06-25T15:00:00.000Z", value : 0});
+        chartData.push({date: "2018-06-24T15:00:00.000Z", value : 0});
+        chartData.push({date: "2018-06-23T15:00:00.000Z", value : 0});
+
+        chartData.push({date: "2018-06-22T15:00:00.000Z", value : 0});
+        chartData.push({date: "2018-06-21T15:00:00.000Z", value : 0});
+        chartData.push({date: "2018-06-20T15:00:00.000Z", value : 0});
+        chartData.push({date: "2018-06-19T15:00:00.000Z", value : 0});
+        chartData.push({date: "2018-06-18T15:00:00.000Z", value : 0});
+        chartData.push({date: "2018-06-17T15:00:00.000Z", value : 0});
+        chartData.push({date: "2018-06-16T15:00:00.000Z", value : 0});
+        
 
         this.setState({
             chartData

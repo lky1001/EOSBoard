@@ -10,39 +10,35 @@ import Fade from '@material-ui/core/Fade';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper';
 
-const width = 750;
+const width = 400;
 const height = 400;
 
 const margin = {
-  top: 60,
+  top: 40,
   bottom: 60,
   left: 80,
-  right: 80,
+  right: 40,
 };
 const xMax = width - margin.left - margin.right;
 const yMax = height - margin.top - margin.bottom;
 
 class FeedChart extends Component {
-    handleScaleTime = (data, x) => scaleTime({
-        range: [0, xMax],
-        domain: extent(data, x)
-      });
-      
-    handleScaleLinear = (data, y) => scaleLinear({
-        range: [yMax, 0],
-        domain: [0, max(data, y)],
-    });
-
-    render(){
+    render() {
         const { isInitialized, isLoading, chartData } = this.props;
         const loading = !isInitialized || isLoading;
-        const { handleScaleTime, handleScaleLinear} = this;
 
-         const x = d => { new Date(d.date);}
-         const y = d => d.value;
+        const x = d => new Date(d.date);
+        const y = d => d.value;
 
-         const xScale = handleScaleTime(chartData, x);
-         const yScale = handleScaleLinear(chartData, y);
+        const xScale = scaleTime({
+            range: [0, xMax],
+            domain: extent(chartData, x),
+        });
+        const yScale = scaleLinear({
+            range: [yMax, 0],
+            domain: [0, max(chartData, y)],
+            nice: true,
+        });
 
         return(
             <Paper className="paper">
@@ -75,14 +71,14 @@ class FeedChart extends Component {
                         scale={yScale}
                         top={0}
                         left={0}
-                        label={'Feed per min'}
+                        label={'Feed per day'}
                         stroke={'#1b1a1e'}
                         tickTextFill={'#1b1a1e'}
                         />
                         <AxisBottom
                             scale={xScale}
                             top={yMax}
-                            label={'Years'}
+                            label={'Days'}
                             stroke={'#1b1a1e'}
                             tickTextFill={'#1b1a1e'}
                         />
@@ -92,8 +88,6 @@ class FeedChart extends Component {
                             yScale={yScale}
                             x={x}
                             y={y}
-                            fill={"url(#gradient)"}
-                            stroke={""}
                         />
                     </Group>
                 </svg>}
