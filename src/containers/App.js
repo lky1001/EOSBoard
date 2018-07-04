@@ -4,13 +4,19 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import HomeIcon from '@material-ui/icons/Home';
 import { NavLink } from 'react-router-dom';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import MenuIcon from '@material-ui/icons/Menu';
 import Routes from '../Routes';
 import Typography from '@material-ui/core/Typography';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import '../styles/App.scss';
 import { withRoot } from '../contexts/RootContext';
+import { ListItemText } from '@material-ui/core';
 
 class App extends Component {
   
@@ -18,7 +24,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      id: null
+      id: null,
+      left: false
     };
   }
 
@@ -32,20 +39,51 @@ class App extends Component {
     await logout();
   }
 
+  toggleDrawer = (side, open) => () => {
+    this.setState({
+      [side]: open,
+    });
+  };
+
   render() {
     const { identity, accountName } = this.props;
+    const sideList = (
+      <div>
+        <List component="nav">
+          <ListItem button component={NavLink} to='/'>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText inset primary="Dashboard" />
+            </ListItem>
+            <ListItem button component={NavLink} to='/timeline'>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+            <ListItemText inset primary="Timeline" />
+          </ListItem>
+        </List>
+      </div>
+    );
 
     return (
         <Router >
           <div className="App theme-dark">
             <AppBar className="appBar" position="static">
               <Toolbar>
-                <IconButton
-                      component={NavLink}
-                      to="/"
-                      color="inherit">
-                      <HomeIcon/>
+                <IconButton color="inherit" aria-label="Menu" onClick={this.toggleDrawer('left', true)}>
+                  <MenuIcon />
                 </IconButton>
+                <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>
+                  <div
+                    tabIndex={0}
+                    role="button"
+                    onClick={this.toggleDrawer('left', false)}
+                    onKeyDown={this.toggleDrawer('left', false)}
+                  >
+                    {sideList}
+                  </div>
+                </Drawer>
                 {
                   !identity &&
                   <Button color="inherit" onClick={this.handleLogin}>
