@@ -60,7 +60,7 @@ class App extends Component {
                 }
                 {
                   identity &&
-                  <Typography variant="title" color="inherit">
+                  <Typography variant="title" color="inherit" style={{width: "100%", textAlign: "left"}}>
                       Welcome {accountName}!
                   </Typography>    
                 }

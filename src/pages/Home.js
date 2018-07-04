@@ -11,6 +11,78 @@ import "../styles/Home.scss";
 import { withRoot } from '../contexts/RootContext';
 import AsideContainer from '../components/AsideContainer';
 
+import SnackbarContent from "@material-ui/core/SnackbarContent";
+import ErrorIcon from "@material-ui/icons/Error";
+import WarningIcon from "@material-ui/icons/Warning";
+import classNames from "classnames";
+import IconButton from "@material-ui/core/IconButton";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import amber from "@material-ui/core/colors/amber";
+
+const variantIcon = {
+    error: ErrorIcon,
+    warning: WarningIcon
+  };
+  
+  const styles1 = theme => ({
+    error: {
+      backgroundColor: theme.palette.error.dark
+    },
+    warning: {
+        backgroundColor: amber[700]
+    },
+    icon: {
+      fontSize: 20
+    },
+    iconVariant: {
+      opacity: 0.9,
+      marginRight: theme.spacing.unit
+    },
+    message: {
+      display: "flex",
+      alignItems: "center"
+    }
+  });
+
+function MySnackbarContent(props) {
+    const { classes, className, message, onClose, variant, ...other } = props;
+    const Icon = variantIcon[variant];
+  
+    return (
+      <SnackbarContent
+        className={classNames(classes[variant], className)}
+        aria-describedby="client-snackbar"
+        message={
+          <span id="client-snackbar" className={classes.message}>
+            <Icon className={classNames(classes.icon, classes.iconVariant)} />
+            {message}
+          </span>
+        }
+        action={[
+          <IconButton
+            key="close"
+            aria-label="Close"
+            color="inherit"
+            className={classes.close}
+            onClick={onClose}
+          />
+        ]}
+        {...other}
+      />
+    );
+  }
+  
+  MySnackbarContent.propTypes = {
+    classes: PropTypes.object.isRequired,
+    className: PropTypes.string,
+    message: PropTypes.node,
+    variant: PropTypes.oneOf(["success", "warning", "error", "info"]).isRequired
+  };
+  
+  const MySnackbarContentWrapper = withStyles(styles1)(MySnackbarContent);
+  
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -104,7 +176,7 @@ class Home extends Component {
     render() {
         const { msg, isLoading } = this.state;
         const { newsfeed, isInitialized, chartData, identity } = this.props;
-        
+
         return  (
             <div className="root">
                 <header className="header">
@@ -115,6 +187,14 @@ class Home extends Component {
                         <Typography variant="display1">
                             Say hello to the news feed.
                         </Typography>
+                        {
+                            !identity &&
+                            <MySnackbarContentWrapper
+                                style={{margin: "auto", marginTop: "10px"}}
+                                variant="warning"
+                                message="You must have installed and logged in Scatter (https://scatter-eos.com)"
+                            />
+                        }
                     </div>
                 </header>
 
