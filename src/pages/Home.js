@@ -15,7 +15,6 @@ import SnackbarContent from "@material-ui/core/SnackbarContent";
 import ErrorIcon from "@material-ui/icons/Error";
 import WarningIcon from "@material-ui/icons/Warning";
 import classNames from "classnames";
-import IconButton from "@material-ui/core/IconButton";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import amber from "@material-ui/core/colors/amber";
@@ -59,15 +58,6 @@ function MySnackbarContent(props) {
             {message}
           </span>
         }
-        action={[
-          <IconButton
-            key="close"
-            aria-label="Close"
-            color="inherit"
-            className={classes.close}
-            onClick={onClose}
-          />
-        ]}
         {...other}
       />
     );
