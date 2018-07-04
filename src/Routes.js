@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Home, Timeline } from './pages';
+import { Home, Timeline, EosAccount } from './pages';
 
 class Routes extends Component {
     render() {
@@ -8,9 +8,7 @@ class Routes extends Component {
             <Switch>
               <Route exact path='/' component={Home} />
               <Route exact path='/timeline' component={Timeline} />
-              <Route render = { function() {
-                return <h1>Not Found</h1>;
-              }} />
+              <Route component={EosAccount} />
             </Switch>
           );
     };

@@ -119,6 +119,15 @@ class Home extends Component {
         loadBetweenLatestAndCurrentFeed();
     }
 
+    handleRemoveFeed = async (_id) => {
+        const { removeFeed } = this.props;
+
+        const result = await removeFeed(_id);
+        console.log(result);
+
+        // todo - load all feed
+    }
+
     handleChange = name => event => {
         this.setState({
             [name]: event.target.value,
@@ -164,7 +173,7 @@ class Home extends Component {
 
     render() {
         const { msg, isLoading } = this.state;
-        const { newsfeed, isInitialized, chartData, identity } = this.props;
+        const { newsfeed, isInitialized, chartData, identity, accountName } = this.props;
 
         return  (
             <div className="root">
@@ -207,7 +216,7 @@ class Home extends Component {
                     <Grid container spacing={24}>
                         <Grid item xs={12} sm={6} md={8}>
                             <main>
-                                <FeedList newsfeed={newsfeed} isInitialized={isInitialized}/>
+                                <FeedList newsfeed={newsfeed} isInitialized={isInitialized} handleRemoveFeed={this.handleRemoveFeed} loginAccountName={accountName}/>
                                 <div>
                                     <Fade   
                                         in={isLoading} 

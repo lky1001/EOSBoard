@@ -11,21 +11,21 @@ const MAX_BOUND = "10000000000000000000";
 const MAX_LIMIT = "10000000000000000000";
 const PAGE_LIMIT = 20;
 
-const protocol = 'https';
-const host = 'nodes.get-scatter.com';
-const port = 443;
-const chainId = 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906';
+// const protocol = 'https';
+// const host = 'nodes.get-scatter.com';
+// const port = 443;
+// const chainId = 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906';
 
-const CONTRACT_NAME = 'faceostest12';
-const TABLE_NAME = 'mcontent';
-
-// const protocol = 'http';
-// const host = '127.0.0.1';
-// const port = 8888;
-// const chainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
-
-// const CONTRACT_NAME = 'board';
+// const CONTRACT_NAME = 'faceostest12';
 // const TABLE_NAME = 'mcontent';
+
+const protocol = 'http';
+const host = '127.0.0.1';
+const port = 8888;
+const chainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f";
+
+const CONTRACT_NAME = 'board';
+const TABLE_NAME = 'mcontent';
 
 const API_GET_INFO = protocol + "://" + host + ":" + port + "/v1/chain/get_info";
 
@@ -396,6 +396,15 @@ class RootProvider extends Component {
 
             return false;
         },
+
+        removeFeed: async (_id) => {
+            if (this.scatter && this.scatter.identity) {
+                const account = this.scatter.identity.accounts.find(acc => acc.blockchain === NETWORK.blockchain);
+                const options = {authorization: [`${account.name}@${account.authority}`]};
+                return this.eos.contract(CONTRACT_NAME).then(contract => contract.remove(_id));
+            }
+            return false;
+        },
     }
 
     render() {
@@ -429,6 +438,7 @@ function withRoot(WrappedComponent) {
                         checkLoginState={actions.checkLoginState}
                         loadNewsFeed={actions.loadNewsFeed}
                         postFeed={actions.postFeed}
+                        removeFeed={actions.removeFeed}
                         loadLatestFeeds={actions.loadLatestFeeds}
                         loadMoreFeeds={actions.loadMoreFeeds}
                         loadBetweenLatestAndCurrentFeed={actions.loadBetweenLatestAndCurrentFeed}

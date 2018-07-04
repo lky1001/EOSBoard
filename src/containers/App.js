@@ -9,6 +9,7 @@ import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import PersonIcon from '@material-ui/icons/Person';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import MenuIcon from '@material-ui/icons/Menu';
 import Routes from '../Routes';
@@ -47,19 +48,30 @@ class App extends Component {
 
   render() {
     const { identity, accountName } = this.props;
+    const myAccountLink = '/' + accountName;
+
     const sideList = (
       <div>
         <List component="nav">
           <ListItem button component={NavLink} to='/'>
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
+            <ListItemText inset primary="Dashboard" />
+          </ListItem>
+          {
+            identity &&
+            <ListItem button component={NavLink} to={myAccountLink}>
               <ListItemIcon>
-                <DashboardIcon />
+                <PersonIcon />
               </ListItemIcon>
-              <ListItemText inset primary="Dashboard" />
+              <ListItemText inset primary="My Account" />
             </ListItem>
-            <ListItem button component={NavLink} to='/timeline'>
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
+          }
+          <ListItem button component={NavLink} to='/timeline'>
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
             <ListItemText inset primary="Timeline" />
           </ListItem>
         </List>

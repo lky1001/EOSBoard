@@ -7,7 +7,8 @@ import Feed from './Feed';
 
 class FeedList extends Component {
     render(){
-        const { newsfeed, isInitialized } = this.props;
+        const { newsfeed, isInitialized, loginAccountName } = this.props;
+        const { handleRemoveFeed } = this.props;
 
         return (
             <Paper className="paper">
@@ -32,7 +33,7 @@ class FeedList extends Component {
                     {
                         newsfeed &&
                         newsfeed.map((feed, index) => {
-                            return <Feed author={feed.author} content={feed.content} created={feed.created} key={index}/>
+                            return <Feed id={feed.id} author={feed.author} content={feed.content} created={feed.created} key={index} removeFeed={handleRemoveFeed} loginAccountName={loginAccountName}/>
                         })
                     }
                 </List>}
