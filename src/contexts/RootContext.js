@@ -141,6 +141,29 @@ class RootProvider extends Component {
         eosLatestBlockTime.setDate(eosLatestBlockTime.getDate() - 7);
         
         var byDay = {};
+
+        let reduct = (feed) => {
+            let key = eosLatestBlockTime.toDateString();
+                
+            const existDay = byDay[key];
+            byDay[key] = existDay + 1;
+
+            return feed;
+        }
+
+        for (let i = 0; i < 7; i++) {
+            let key = eosLatestBlockTime.toDateString();
+
+            byDay[key] = 0;
+            
+            newsfeed.filter(feed => {
+                return new Date(feed['created']).toDateString() === eosLatestBlockTime.toDateString();
+            })
+            .map(reduct);
+
+            eosLatestBlockTime.setDate(eosLatestBlockTime.getDate() + 1);
+        }
+
         newsfeed.filter(feed => {
             return new Date(feed['created']) >= eosLatestBlockTime
         })
