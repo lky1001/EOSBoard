@@ -12,7 +12,7 @@ class AsideContainer extends Component {
 
         return(
         <Paper className="paper">
-            <h3 className="newsfeedHeader">
+            <h3 className="newsfeedHeader" style={{paddingTop: "0px"}}>
                 Status
             </h3>
 

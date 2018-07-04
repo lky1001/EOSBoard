@@ -12,7 +12,7 @@ class FeedList extends Component {
 
         return (
             <Paper className="paper">
-                <h3 className="newsfeedHeader">
+                <h3 className="newsfeedHeader" style={{paddingTop: "0px"}}>
                     News Feed
                 </h3>
         
@@ -29,7 +29,7 @@ class FeedList extends Component {
                 </div>
 
                 {isInitialized &&
-                <List component="nav">
+                <List component="nav" style={{paddingBottom: "0px"}}>
                     {
                         newsfeed &&
                         newsfeed.map((feed, index) => {
