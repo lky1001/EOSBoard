@@ -18,7 +18,6 @@ const chainId = 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e90
 
 const CONTRACT_NAME = 'faceostest12';
 const TABLE_NAME = 'mcontent';
-const API_GET_INFO = "https://" + host + ":" + port + "/v1/chain/get_info";
 
 // const protocol = 'http';
 // const host = '127.0.0.1';
@@ -27,6 +26,8 @@ const API_GET_INFO = "https://" + host + ":" + port + "/v1/chain/get_info";
 
 // const CONTRACT_NAME = 'board';
 // const TABLE_NAME = 'mcontent';
+
+const API_GET_INFO = protocol + "://" + host + ":" + port + "/v1/chain/get_info";
 
 const requiredFields = {
     accounts:[
