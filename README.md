@@ -9,9 +9,10 @@ Create react project by create-react-app
 - React
 - React-router
 - Material-ui
+- D3.js
+- Eos.js
 - Webpack
 - Sass
-- Eos.js
 - Scatter
 
 
