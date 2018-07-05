@@ -28,6 +28,7 @@ const TABLE_NAME = 'mcontent';
 // const TABLE_NAME = 'mcontent';
 
 const API_GET_INFO = protocol + "://" + host + ":" + port + "/v1/chain/get_info";
+const API_GET_CURRENCY_BALANCE = protocol + "://" + host + ":" + port + "/v1/chain/get_currency_balance";
 
 const requiredFields = {
     accounts:[
@@ -405,6 +406,30 @@ class RootProvider extends Component {
             }
             return false;
         },
+
+        loadMyAccountInfo: async (accountName) => {
+            // if(this.eos){
+            //     const apiUrl = API_GET_CURRENCY_BALANCE + "?code=" + CONTRACT_NAME + "&account=" + accountName;
+            //     console.log(apiUrl);
+
+            //     try
+            //     {
+            //         fetch(apiUrl)  
+            //         .then(function(response) {
+            //             return response.json()
+            //         })
+            //         .then(data => {
+            //             this.setState({
+            //                 head_block_time : data["head_block_time"]
+            //             })
+
+            //             this._handleScatterInitialized();
+            //         })
+            //     }catch(err){
+            //         console.log(err);
+            //     }
+            // }
+        }
     }
 
     render() {
@@ -443,6 +468,7 @@ function withRoot(WrappedComponent) {
                         loadMoreFeeds={actions.loadMoreFeeds}
                         loadBetweenLatestAndCurrentFeed={actions.loadBetweenLatestAndCurrentFeed}
                         notifyFeedsUpdated={actions.notifyFeedsUpdated}
+                        loadMyAccountInfo={actions.loadMyAccountInfo}
                     />
                 )
             }
