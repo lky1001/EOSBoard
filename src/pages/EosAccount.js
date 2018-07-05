@@ -5,16 +5,25 @@ import Grid from '@material-ui/core/Grid';
 import AccountInfo from '../components/AccountInfo';
 
 class EosAccount extends Component {
-    componentWillUpdate = (nextProps, nextState) => {
-        const { loadMyAccountInfo, accountName } = this.props;
+    state = {
+        accountLoaded : false
+    }
+    shouldComponentUpdate = (nextProps, nextState) => {
+        const { accountName, accountInfo, loadMyAccountInfo } = nextProps;
+        const { accountLoaded } = this.state;
 
-        if(accountName){
+        if(accountName && !accountLoaded){
             loadMyAccountInfo(accountName);
+            this.setState({
+                accountLoaded : true
+            })
         }
+
+        return accountInfo ? true : false;
     }
 
     render() {
-        const { accountInfo } = this.props;
+         const { accountInfo } = this.props;
 
         return(
             <Grid container spacing={24}>

@@ -3,7 +3,10 @@ import Fade from '@material-ui/core/Fade';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
 import * as avatarService from '../services/AvatarService';
+import '../styles/AccountInfo.scss';
+import { Typography } from '@material-ui/core';
 
 class AccountInfo extends Component {
     render() {
@@ -12,22 +15,25 @@ class AccountInfo extends Component {
 
         return(
         <Paper className="paper">
-            <Grid item xs={12} sm={6} md={4}>
-                <Fade   
-                    in={!accountInfo} 
-                    style={{
-                        transitionDelay: !accountInfo ? '800ms' : '0ms',
-                    }}
-                    unmountOnExit
-                >
-                    <CircularProgress />
-                </Fade>
+            <Fade  
+                in={!accountInfo} 
+                style={{
+                    transitionDelay: !accountInfo ? '800ms' : '0ms',
+                }}
+                unmountOnExit
+            >
+                <CircularProgress />
+            </Fade>
 
-                {accountInfo &&
-                <Paper>
-                    {accountInfo["ram_quota"]}
-                </Paper>}
-            </Grid>
+            {accountInfo &&
+                <div className="row">
+                    <Avatar className="avatar" src={avatarService.generateAvatarURL(accountInfo["account_name"])}/>
+                    <Typography>Account :  {accountInfo["account_name"]}</Typography>
+                    <Typography>Ram quota :  {accountInfo["ram_quota"]}</Typography>
+                    <Typography>Ram usage :  {accountInfo["ram_usage"]}</Typography>
+                    <Typography>Net weight :  {accountInfo["net_weight"]}</Typography>
+                    <Typography>Cpu weight :  {accountInfo["cpu_weight"]}</Typography>
+                </div>}
         </Paper>
         )
     };
