@@ -10,9 +10,10 @@ import { Typography } from '@material-ui/core';
 
 class AccountInfo extends Component {
     render() {
-        const { accountInfo } = this.props;
+        const { accountInfo, newfeed } = this.props;
         // const { privileged, ram_quota, net_weight, cpu_weight,net_limit,cpu_limit,ram_usage,total_resources,self_delegated_bandwidth,voter_info } = accountInfo;
 
+        console.log(newfeed);
         return(
         <Paper className="paper">
             <Fade  

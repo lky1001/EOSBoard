@@ -381,6 +381,50 @@ class RootProvider extends Component {
                 )
             },
 
+            loadMyFeeds : () =>{
+                const { accountName } = this.state;
+                const table_key = new BigNumber(EosFormat.encodeName(accountName, false))
+        
+                return new Promise((resolve, reject) => {
+                    this.eos.getTableRows(
+                    {
+                        json: true, 
+                        code: CONTRACT_NAME, 
+                        scope: CONTRACT_NAME, 
+                        table: TABLE_NAME, 
+                        table_key: table_key, 
+                        upper_bound: MAX_BOUND,
+                        limit : MAX_LIMIT})
+                        .then((data) => {
+                            let newFeeds = [];
+                            
+                            if (data.rows && data.rows.length > 0) {
+                                const sortedData = data.rows.reverse();
+                                const latestFeeds = sortedData.slice(0, PAGE_LIMIT);
+                                latestFeeds.map(d => {
+                                    if(d.author !== accountName) return d;
+                                    return newFeeds.push(
+                                        {
+                                            id : d._id,
+                                            author : d.author, 
+                                            content : d.content, 
+                                            created : moment.unix(d.created).format('LLL')
+                                        });
+                                });
+                            }
+                            
+                            return newFeeds;
+                        })
+                        .then((result) => {
+                            resolve(result);
+                        })
+                        .catch(err => {
+                            reject(err);
+                        });
+                    }
+                );
+            },
+
         notifyFeedsUpdated : (newFeeds, nextUpperBound) => {
             this.setState({
                 newsfeed : newFeeds,
@@ -455,6 +499,7 @@ function withRoot(WrappedComponent) {
                         loadBetweenLatestAndCurrentFeed={actions.loadBetweenLatestAndCurrentFeed}
                         notifyFeedsUpdated={actions.notifyFeedsUpdated}
                         loadMyAccountInfo={actions.loadMyAccountInfo}
+                        loadMyFeeds={actions.loadMyFeeds}
                     />
                 )
             }
