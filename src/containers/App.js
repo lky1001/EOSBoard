@@ -48,7 +48,6 @@ class App extends Component {
 
   render() {
     const { identity, accountName } = this.props;
-    const myAccountLink = '/' + accountName;
 
     const sideList = (
       <div>
@@ -61,19 +60,13 @@ class App extends Component {
           </ListItem>
           {
             identity &&
-            <ListItem button component={NavLink} to={myAccountLink}>
+            <ListItem button component={NavLink} to='/account'>
               <ListItemIcon>
                 <PersonIcon />
               </ListItemIcon>
               <ListItemText inset primary="My Account" />
             </ListItem>
           }
-          <ListItem button component={NavLink} to='/timeline'>
-            <ListItemIcon>
-              <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText inset primary="Timeline" />
-          </ListItem>
         </List>
       </div>
     );
