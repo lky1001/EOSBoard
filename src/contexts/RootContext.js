@@ -28,7 +28,6 @@ const TABLE_NAME = 'mcontent';
 // const TABLE_NAME = 'mcontent';
 
 const API_GET_INFO = protocol + "://" + host + ":" + port + "/v1/chain/get_info";
-const API_GET_CURRENCY_BALANCE = protocol + "://" + host + ":" + port + "/v1/chain/get_currency_balance";
 
 const requiredFields = {
     accounts:[
@@ -91,7 +90,8 @@ class RootProvider extends Component {
         newsfeed: [], 
         chartData: [],
         nextUpperBound : 0,
-        head_block_time : null
+        head_block_time : null,
+        accountInfo : null
     }
 
     _getEosChainInfo = () =>{
@@ -408,27 +408,12 @@ class RootProvider extends Component {
         },
 
         loadMyAccountInfo: async (accountName) => {
-            // if(this.eos){
-            //     const apiUrl = API_GET_CURRENCY_BALANCE + "?code=" + CONTRACT_NAME + "&account=" + accountName;
-            //     console.log(apiUrl);
-
-            //     try
-            //     {
-            //         fetch(apiUrl)  
-            //         .then(function(response) {
-            //             return response.json()
-            //         })
-            //         .then(data => {
-            //             this.setState({
-            //                 head_block_time : data["head_block_time"]
-            //             })
-
-            //             this._handleScatterInitialized();
-            //         })
-            //     }catch(err){
-            //         console.log(err);
-            //     }
-            // }
+            if(this.eos){
+                const result = await this.eos.getAccount(accountName);
+                this.setState({
+                    accountInfo : result
+                })
+            }
         }
     }
 
@@ -454,6 +439,7 @@ function withRoot(WrappedComponent) {
                         isInitialized={state.isInitialized}
                         identity={state.identity}
                         accountName={state.accountName}
+                        accountInfo={state.accountInfo}
                         nextUpperBound={state.nextUpperBound}
                         chartData={state.chartData}
                         newsfeed={state.newsfeed}
