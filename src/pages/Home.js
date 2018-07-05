@@ -79,8 +79,8 @@ class Home extends Component {
         
         this.state = {
             msg : '',
-            navIndex : 0,
-            isLoading : false
+            isLoading : false,
+            freshLoaded : false,
         };
     }
 
@@ -88,15 +88,19 @@ class Home extends Component {
         window.addEventListener('scroll', this.handleScroll);
 
         this.interval = setInterval(() => {
-            const { loadBetweenLatestAndCurrentFeed } = this.props;
+            const { isInitialized, loadBetweenLatestAndCurrentFeed } = this.props;
 
-            loadBetweenLatestAndCurrentFeed();
+            if(isInitialized){
+                loadBetweenLatestAndCurrentFeed();
+            }
         }, 10000);
 
         this.loginCheck = setInterval(() => {
-            const { checkLoginState } = this.props;
+            const { isInitialized, checkLoginState } = this.props;
 
-            checkLoginState();
+            if(isInitialized){
+                checkLoginState();
+            }
         }, 10000);
     }
 
@@ -133,12 +137,6 @@ class Home extends Component {
             [name]: event.target.value,
         });
     };
-
-    handleNavChange = (event, value) => {
-        this.setState({
-            navIndex : value
-        })
-    }
 
     handleScroll = async() => {
         const { isLoading } = this.state;

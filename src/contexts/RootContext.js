@@ -58,14 +58,13 @@ class RootProvider extends Component {
     constructor(props) {
         super(props);
 
-        
         document.addEventListener('scatterLoaded', scatterExtension => {
             console.log('scatterloaded');
             this.scatter = window.scatter;
 
             if (this.scatter) {
                 this.eos = this.scatter.eos(NETWORK, Eos, CONFIG);
-                this._getEosChainInfo();
+                this._handleScatterInitialized();
             }
         });
 
@@ -78,7 +77,7 @@ class RootProvider extends Component {
                     chainId: chainId
                 });
 
-                this._getEosChainInfo();
+                this._handleScatterInitialized();
             }
         }, 1000);
     }
@@ -88,50 +87,35 @@ class RootProvider extends Component {
         identity: null,
         accountName: '',
         newsfeed: [], 
+        mynewsfeed: [],
+        myfeednextUpperBound : 0,
         chartData: [],
         nextUpperBound : 0,
         head_block_time : null,
         accountInfo : null
     }
 
-    _getEosChainInfo = () =>{
+    _handleScatterInitialized = async () =>{
         try
         {
-            fetch(API_GET_INFO)  
-            .then(function(response) {
-                return response.json()
-            })
-            .then(data => {
-                this.setState({
-                    head_block_time : data["head_block_time"]
-                })
+            const { loadLatestFeeds, checkLoginState, notifyFeedsUpdated } = this.actions;
+            const chainInfo = await this.eos.getInfo({}).then(result => result);
+            const head_block_time = chainInfo["head_block_time"]
 
-                this._handleScatterInitialized();
-            })
-        }catch(err){
-            console.log(err);
-        }
-    }
-
-    _handleScatterInitialized = async() =>{
-        const { checkLoginState, loadLatestFeeds, notifyFeedsUpdated } = this.actions;
-
-        try
-        {
             await checkLoginState();
             const result = await loadLatestFeeds();
             const resultLength = result.length;
             const nextUpperBound = (result && resultLength > 0 ? result[resultLength - 1].id : 0);
             notifyFeedsUpdated(result, nextUpperBound);
-            this._analyzeChartStatus();
-        }
-        catch(err){
-            console.log(err);
-        }
-        finally{
+            
             this.setState({
+                head_block_time,
                 isInitialized : true
-            })
+            });
+
+            this._analyzeChartStatus();
+        }catch(err){
+            console.log(err);
         }
     }
 
@@ -451,11 +435,18 @@ class RootProvider extends Component {
             return false;
         },
 
-        loadMyAccountInfo: async (accountName) => {
+        loadMyAccountInfo: async () => {
             if(this.eos){
-                const result = await this.eos.getAccount(accountName);
+                const { loadMyFeeds } = this.actions;
+                const accountInfo = await this.eos.getAccount(this.state.accountName);
+                const mynewsfeed = await loadMyFeeds();
+                const myFeedsLength = mynewsfeed.length;
+                const myfeednextUpperBound = (mynewsfeed && myFeedsLength > 0 ? mynewsfeed[myFeedsLength - 1].id : 0);
+
                 this.setState({
-                    accountInfo : result
+                    accountInfo,
+                    mynewsfeed,
+                    myfeednextUpperBound
                 })
             }
         }
@@ -487,11 +478,11 @@ function withRoot(WrappedComponent) {
                         nextUpperBound={state.nextUpperBound}
                         chartData={state.chartData}
                         newsfeed={state.newsfeed}
+                        mynewsfeed={state.mynewsfeed}
                         login={actions.login}
                         logout={actions.logout}
                         isLoggedIn={actions.isLoggedIn}
                         checkLoginState={actions.checkLoginState}
-                        loadNewsFeed={actions.loadNewsFeed}
                         postFeed={actions.postFeed}
                         removeFeed={actions.removeFeed}
                         loadLatestFeeds={actions.loadLatestFeeds}

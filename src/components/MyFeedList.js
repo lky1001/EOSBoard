@@ -7,7 +7,7 @@ import Feed from './Feed';
 
 class MyFeedList extends Component {
     render(){
-        const { newsfeed, loginAccountName } = this.props;
+        const { mynewsfeed, loginAccountName } = this.props;
 
         return (
             <Paper className="paper">
@@ -17,9 +17,9 @@ class MyFeedList extends Component {
         
                 <div>
                     <Fade   
-                        in={!newsfeed} 
+                        in={!mynewsfeed} 
                         style={{
-                            transitionDelay: !newsfeed ? '800ms' : '0ms',
+                            transitionDelay: !mynewsfeed ? '800ms' : '0ms',
                         }}
                         unmountOnExit
                     >
@@ -27,11 +27,11 @@ class MyFeedList extends Component {
                     </Fade>
                 </div>
 
-                {newsfeed &&
+                {mynewsfeed &&
                 <List component="nav" style={{paddingBottom: "0px"}}>
                     {
-                        newsfeed &&
-                        newsfeed.map((feed, index) => {
+                        mynewsfeed &&
+                        mynewsfeed.map((feed, index) => {
                             return <Feed id={feed.id} author={feed.author} content={feed.content} created={feed.created} key={index} loginAccountName={loginAccountName}/>
                         })
                     }
@@ -42,7 +42,7 @@ class MyFeedList extends Component {
 }
 
 MyFeedList.defaultProps = {
-    newsfeed : []
+    mynewsfeed : []
 }
 
 export default MyFeedList;
