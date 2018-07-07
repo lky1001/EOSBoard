@@ -6,9 +6,11 @@ import AccountInfo from '../components/AccountInfo';
 import MyFeedList from '../components/MyFeedList';
 
 class EosAccount extends Component {
-    componentDidMount = () => {
-        const { loadMyAccountInfo } = this.props;
-        loadMyAccountInfo();
+    componentWillUpdate = (prevProps, prevState) => {
+        if(prevProps.isInitialized !== this.props.isInitialized){
+            const { loadMyAccountInfo } = this.props;
+            loadMyAccountInfo();
+        }
     }
 
     render() {
