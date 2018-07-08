@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Fade from '@material-ui/core/Fade';
 import Feed from './Feed';
 
 class FeedList extends Component {
     render(){
-        const { newsfeed, isInitialized, loginAccountName } = this.props;
+        const { newsfeed, loginAccountName } = this.props;
         const { handleRemoveFeed } = this.props;
 
         return (
@@ -16,19 +14,6 @@ class FeedList extends Component {
                     News Feed
                 </h3>
         
-                <div>
-                    <Fade   
-                        in={!isInitialized} 
-                        style={{
-                            transitionDelay: !isInitialized ? '800ms' : '0ms',
-                        }}
-                        unmountOnExit
-                    >
-                        <CircularProgress />
-                    </Fade>
-                </div>
-
-                {isInitialized &&
                 <List component="nav" style={{paddingBottom: "0px"}}>
                     {
                         newsfeed &&
@@ -36,7 +21,7 @@ class FeedList extends Component {
                             return <Feed id={feed.id} author={feed.author} content={feed.content} created={feed.created} key={index} removeFeed={handleRemoveFeed} loginAccountName={loginAccountName}/>
                         })
                     }
-                </List>}
+                </List>
             </Paper>
           )
     }

@@ -84,24 +84,33 @@ class Home extends Component {
         };
     }
 
-    componentDidMount = () => {
+    componentDidMount = async () => {
+        const { homePageLoaded } = this.props;
         window.addEventListener('scroll', this.handleScroll);
 
         this.interval = setInterval(() => {
-            const { isInitialized, loadBetweenLatestAndCurrentFeed } = this.props;
-
-            if(isInitialized){
-                loadBetweenLatestAndCurrentFeed();
-            }
+            const { loadBetweenLatestAndCurrentFeed } = this.props;
+            loadBetweenLatestAndCurrentFeed();
         }, 10000);
 
         this.loginCheck = setInterval(() => {
-            const { isInitialized, checkLoginState } = this.props;
-
-            if(isInitialized){
-                checkLoginState();
-            }
+            const { checkLoginState } = this.props;
+            checkLoginState();
         }, 10000);
+
+        try{
+            this.setState({
+                isLoading : true
+            })
+            await homePageLoaded();
+        }catch(err){
+            console.log(err);
+        }
+        finally{
+            this.setState({
+                isLoading : false
+            })
+        }
     }
 
     componentWillUnmount = () => {
@@ -214,7 +223,7 @@ class Home extends Component {
                     <Grid container spacing={24}>
                         <Grid item xs={12} sm={6} md={8}>
                             <main>
-                                <FeedList newsfeed={newsfeed} isInitialized={isInitialized} handleRemoveFeed={this.handleRemoveFeed} loginAccountName={accountName}/>
+                                <FeedList newsfeed={newsfeed} handleRemoveFeed={this.handleRemoveFeed} loginAccountName={accountName}/>
                                 <div>
                                     <Fade   
                                         in={isLoading} 
@@ -231,7 +240,18 @@ class Home extends Component {
 
                         <Grid item xs={12} sm={6} md={4}>
                             <aside>
-                                <AsideContainer isInitialized={isInitialized} chartData={chartData}/>
+                                <AsideContainer chartData={chartData}/>
+                                <div>
+                                    <Fade   
+                                        in={isLoading} 
+                                        style={{
+                                            transitionDelay: isLoading ? '800ms' : '0ms',
+                                        }}
+                                        unmountOnExit
+                                    >
+                                        <CircularProgress />
+                                    </Fade>
+                                </div>
                             </aside>
                         </Grid>
                     </Grid>

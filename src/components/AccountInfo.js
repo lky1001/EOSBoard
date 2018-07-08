@@ -15,15 +15,17 @@ class AccountInfo extends Component {
 
         return(
         <Paper className="paper">
-            <Fade  
-                in={!accountInfo} 
-                style={{
-                    transitionDelay: !accountInfo ? '800ms' : '0ms',
-                }}
-                unmountOnExit
-            >
-                <CircularProgress />
-            </Fade>
+            <div>
+                <Fade  
+                    in={!accountInfo} 
+                    style={{
+                        transitionDelay: !accountInfo ? '800ms' : '0ms',
+                    }}
+                    unmountOnExit
+                >
+                    <CircularProgress />
+                </Fade>
+            </div>
 
             {accountInfo &&
                 <div className="row">
