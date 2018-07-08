@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Fade from '@material-ui/core/Fade';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import * as avatarService from '../services/AvatarService';
 import '../styles/AccountInfo.scss';

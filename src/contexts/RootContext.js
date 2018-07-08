@@ -92,7 +92,6 @@ class RootProvider extends Component {
     actions = {
         login: async () => {
             await this._initialize();
-            console.log("로긴 시도");
             let id = await this.scatter.getIdentity(AppCommon.requiredFields);
             
             if (id) {
@@ -375,8 +374,8 @@ class RootProvider extends Component {
         removeFeed: async (_id) => {
             await this._initialize();
             if (this.scatter && this.scatter.identity) {
-                const account = this.scatter.identity.accounts.find(acc => acc.blockchain === AppCommon.NETWORK.blockchain);
-                const options = {authorization: [`${account.name}@${account.authority}`]};
+                //const account = this.scatter.identity.accounts.find(acc => acc.blockchain === AppCommon.NETWORK.blockchain);
+                //const options = {authorization: [`${account.name}@${account.authority}`]};
                 return this.eos.contract(AppCommon.CONTRACT_NAME).then(contract => contract.remove(_id));
             }
             return false;

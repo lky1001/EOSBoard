@@ -86,17 +86,17 @@ class Home extends Component {
 
     componentDidMount = async () => {
         const { homePageLoaded } = this.props;
-        window.addEventListener('scroll', this.handleScroll);
+        // window.addEventListener('scroll', this.handleScroll);
 
-        this.interval = setInterval(() => {
-            const { loadBetweenLatestAndCurrentFeed } = this.props;
-            loadBetweenLatestAndCurrentFeed();
-        }, 10000);
+        // this.interval = setInterval(() => {
+        //     const { loadBetweenLatestAndCurrentFeed } = this.props;
+        //     loadBetweenLatestAndCurrentFeed();
+        // }, 10000);
 
-        this.loginCheck = setInterval(() => {
-            const { checkLoginState } = this.props;
-            checkLoginState();
-        }, 10000);
+        // this.loginCheck = setInterval(() => {
+        //     const { checkLoginState } = this.props;
+        //     checkLoginState();
+        // }, 10000);
 
         try{
             this.setState({
@@ -180,7 +180,7 @@ class Home extends Component {
 
     render() {
         const { msg, isLoading } = this.state;
-        const { newsfeed, isInitialized, chartData, identity, accountName } = this.props;
+        const { newsfeed, chartData, identity, accountName } = this.props;
 
         return  (
             <div className="root">
