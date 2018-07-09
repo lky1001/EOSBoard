@@ -1,5 +1,6 @@
 export const state = {
-    isInitialized : false,
+    scatter : undefined,
+    eos : undefined,
     identity: null,
     accountName: '',
     newsfeed: [], 

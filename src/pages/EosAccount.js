@@ -6,7 +6,22 @@ import AccountInfo from '../components/AccountInfo';
 import MyFeedList from '../components/MyFeedList';
 
 class EosAccount extends Component {
-    componentDidMount = () => {
+    componentDidMount = async () => {
+        const { scatter, setScatter } = this.props;
+
+        if(!scatter){
+            document.addEventListener('scatterLoaded', scatterExtension => {
+                console.log('scatterloaded');
+                const scatter = window.scatter;
+                setScatter(scatter);
+                this.scatterLoaded(scatter);
+            });
+        }else {
+            this.scatterLoaded(scatter);
+        }
+    }
+
+    scatterLoaded = () => {
         const { eosAccountPageLoaded } = this.props;
         eosAccountPageLoaded();
     }

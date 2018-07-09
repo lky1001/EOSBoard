@@ -80,11 +80,31 @@ class Home extends Component {
         this.state = {
             msg : '',
             isLoading : false,
-            freshLoaded : false,
         };
     }
 
     componentDidMount = async () => {
+        const { scatter, setScatter } = this.props;
+
+        if(!scatter){
+            document.addEventListener('scatterLoaded', scatterExtension => {
+                console.log('scatterloaded');
+                const scatter = window.scatter;
+                setScatter(scatter);
+                this.scatterLoaded(scatter);
+            });
+        }else {
+            this.scatterLoaded(scatter);
+        }
+    }
+
+    componentWillUnmount = () => {
+        clearInterval(this.interval);
+        clearInterval(this.loginCheck);
+    }
+
+    scatterLoaded = async () => {
+        console.log("스태터 로딩됨");
         const { homePageLoaded } = this.props;
         window.addEventListener('scroll', this.handleScroll);
 
@@ -102,7 +122,7 @@ class Home extends Component {
             this.setState({
                 isLoading : true
             })
-            
+
             await homePageLoaded();
         }catch(err){
             console.log(err);
@@ -112,11 +132,6 @@ class Home extends Component {
                 isLoading : false
             })
         }
-    }
-
-    componentWillUnmount = () => {
-        clearInterval(this.interval);
-        clearInterval(this.loginCheck);
     }
 
     handlePostFeed = async() => {

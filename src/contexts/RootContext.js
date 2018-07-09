@@ -5,7 +5,6 @@ import { BigNumber } from 'bignumber.js';
 import moment from 'moment';
 import * as AppCommon from './AppCommon';
 import * as RootState from './RootState';
-import ScatterClient from '../services/ScatterClient';
 
 const Context = createContext(); 
 const { Provider, Consumer: RootConsumer } = Context; 
@@ -13,26 +12,10 @@ const { Provider, Consumer: RootConsumer } = Context;
 class RootProvider extends Component {
     state = RootState.state;
 
-    _initialize = async () =>{
-        if(!this.eos){
-            this.eos = Eos({
-                httpEndpoint: AppCommon.protocol + "://" + AppCommon.host + ":" + AppCommon.port, 
-                chainId: AppCommon.chainId
-            });
-        }
-
-        if(!this.scatter){
-            this.scatter = await new ScatterClient().getClient();
-            this.eos = this.scatter.eos(AppCommon.NETWORK, Eos, AppCommon.CONFIG)
-            this.setState({
-                isInitialized : true
-            })
-        }
-    }
-
     _analyzeChartStatus = async () => {
-        await this._initialize();
-        const { newsfeed, head_block_time } = this.state;
+        const { scatter, eos, newsfeed, head_block_time } = this.state;
+        if(!scatter || !eos) return;
+
         const eosLatestBlockTime = new Date(head_block_time);
         eosLatestBlockTime.setDate(eosLatestBlockTime.getDate() - 7);
         
@@ -92,13 +75,14 @@ class RootProvider extends Component {
 
     actions = {
         login: async () => {
-            await this._initialize();
-            let id = await this.scatter.getIdentity(AppCommon.requiredFields);
+            const { scatter} = this.state;
+            if(!scatter) return;
+            let id = await scatter.getIdentity(AppCommon.requiredFields);
             
             if (id) {
-                this.scatter.useIdentity(id);
-                console.log('Possible identity', this.scatter.identity);
-                const accountName = this.scatter.identity.accounts.find(acc => acc.blockchain === AppCommon.NETWORK.blockchain);
+                scatter.useIdentity(id);
+                console.log('Possible identity', scatter.identity);
+                const accountName = scatter.identity.accounts.find(acc => acc.blockchain === AppCommon.NETWORK.blockchain);
 
                 this.setState({
                     identity: id,
@@ -108,8 +92,9 @@ class RootProvider extends Component {
         },
 
         logout: async () => {
-            await this._initialize();
-            let res = await this.scatter.forgetIdentity();
+            const { scatter } = this.state;
+            if(!scatter) return;
+            let res = await scatter.forgetIdentity();
 
             console.log('logout : ' + res);
 
@@ -120,7 +105,9 @@ class RootProvider extends Component {
         },
 
         checkLoginState: async () => {
-            let isLoggedIn = this.scatter && !!this.scatter.identity;
+            const { scatter } = this.state;
+            if(!scatter) return;
+            let isLoggedIn = scatter && !!scatter.identity;
 
             if (!isLoggedIn) {
                 this.setState({
@@ -128,26 +115,29 @@ class RootProvider extends Component {
                     accountName: ''
                 });
             } else {
-                const accountName = this.scatter.identity.accounts.find(acc => acc.blockchain === AppCommon.NETWORK.blockchain);
+                const accountName = scatter.identity.accounts.find(acc => acc.blockchain === AppCommon.NETWORK.blockchain);
 
                 this.setState({
-                    identity: this.scatter.identity,
+                    identity: scatter.identity,
                     accountName: accountName.name
                 });
             }
         },
 
         isLoggedIn: () => {
-            return this.scatter && !!this.scatter.identity;
+            const { scatter } = this.state;
+            if(!scatter) return false;
+            return scatter && !!scatter.identity;
         },
 
         homePageLoaded: async () =>{
-            await this._initialize();
+            const { scatter, eos } = this.state;
+            if(!scatter || !eos) return;
 
             try
             {
                 const { loadLatestFeeds, checkLoginState, notifyFeedsUpdated } = this.actions;
-                const chainInfo = await this.eos.getInfo({}).then(result => result);
+                const chainInfo = await eos.getInfo({}).then(result => result);
                 const head_block_time = chainInfo["head_block_time"]
     
                 await checkLoginState();
@@ -168,16 +158,20 @@ class RootProvider extends Component {
 
         eosAccountPageLoaded : async () => {
             const { loadMyAccountInfo} = this.actions;
+            const { scatter } = this.state;
+            if(!scatter) return;
+
             await loadMyAccountInfo();
         },
 
         loadLatestFeeds : async () =>{
-            await this._initialize();
-            const { accountName } = this.state;
+            const { scatter, eos, accountName } = this.state;
+            if(!scatter || !eos) return;
+
             const table_key = new BigNumber(EosFormat.encodeName(accountName, false))
     
             return new Promise((resolve, reject) => {
-                    this.eos.getTableRows(
+                    eos.getTableRows(
                     {
                         json: true, 
                         code: AppCommon.CONTRACT_NAME, 
@@ -216,13 +210,13 @@ class RootProvider extends Component {
             },
 
             loadMoreFeeds : async () =>{
-                await this._initialize();
-                const { nextUpperBound, accountName } = this.state;
+                const { scatter, eos, nextUpperBound, accountName } = this.state;
+                if(!scatter || !eos) return;
                 const nextLowerBound = Math.max(nextUpperBound - AppCommon.PAGE_LIMIT, 0);
                 const table_key = new BigNumber(EosFormat.encodeName(accountName, false));
 
                 return new Promise((resolve, reject) => {
-                    this.eos.getTableRows(
+                    eos.getTableRows(
                         {
                             json: true, 
                             code: AppCommon.CONTRACT_NAME, 
@@ -259,8 +253,8 @@ class RootProvider extends Component {
             },
 
             loadBetweenLatestAndCurrentFeed : async () =>{
-                await this._initialize();
-                const { newsfeed, accountName } = this.state;
+                const { scatter, eos, newsfeed, accountName } = this.state;
+                if(!scatter || !eos) return;
                 const table_key = new BigNumber(EosFormat.encodeName(accountName, false))
                 const latestFeed = newsfeed[0];
                 let lowerBound = 0;
@@ -269,7 +263,7 @@ class RootProvider extends Component {
                     lowerBound = latestFeed.id + 1;
                 }
                 
-                this.eos.getTableRows(
+                eos.getTableRows(
                 {
                     json: true, 
                     code: AppCommon.CONTRACT_NAME, 
@@ -306,12 +300,12 @@ class RootProvider extends Component {
             },
 
             loadMyFeeds : async () =>{
-                await this._initialize();
-                const { accountName } = this.state;
+                const { scatter, eos, accountName } = this.state;
+                if(!scatter || !eos) return;
                 const table_key = new BigNumber(EosFormat.encodeName(accountName, false))
         
                 return new Promise((resolve, reject) => {
-                    this.eos.getTableRows(
+                    eos.getTableRows(
                     {
                         json: true, 
                         code: AppCommon.CONTRACT_NAME, 
@@ -358,33 +352,43 @@ class RootProvider extends Component {
         },
 
         postFeed: async (title, msg) => {
-            await this._initialize();
-            if (this.scatter && this.scatter.identity) {
-                const account = this.scatter.identity.accounts.find(acc => acc.blockchain === AppCommon.NETWORK.blockchain);
+            const { scatter, eos } = this.state;
+            if(!scatter || !eos) return;
+
+            if (scatter && scatter.identity) {
+                const account = scatter.identity.accounts.find(acc => acc.blockchain === AppCommon.NETWORK.blockchain);
                 const options = {authorization: [`${account.name}@${account.authority}`]};
-                return this.eos.contract(AppCommon.CONTRACT_NAME).then(contract => contract.write(account.name, title, msg, options));
+                return eos.contract(AppCommon.CONTRACT_NAME).then(contract => contract.write(account.name, title, msg, options));
             }
 
             return false;
         },
 
         removeFeed: async (_id) => {
-            await this._initialize();
-            if (this.scatter && this.scatter.identity) {
-                //const account = this.scatter.identity.accounts.find(acc => acc.blockchain === AppCommon.NETWORK.blockchain);
+            const { scatter, eos } = this.state;
+            if(!scatter || !eos) return;
+
+            if (scatter && scatter.identity) {
+                //const account = scatter.identity.accounts.find(acc => acc.blockchain === AppCommon.NETWORK.blockchain);
                 //const options = {authorization: [`${account.name}@${account.authority}`]};
-                return this.eos.contract(AppCommon.CONTRACT_NAME).then(contract => contract.remove(_id));
+                return eos.contract(AppCommon.CONTRACT_NAME).then(contract => contract.remove(_id));
             }
             return false;
         },
 
         loadMyAccountInfo: async () => {
-            await this._initialize();
-            const { accountName } = this.state;
+            const { checkLoginState } = this.actions;
+            const { scatter, eos } = this.state;
+            if(!scatter || !eos) return;
             
-            if(this.eos && accountName){
+            await checkLoginState();
+            const { accountName } = this.state;
+
+            if(eos && accountName){
+                console.log(accountName);
                 const { loadMyFeeds } = this.actions;
-                const accountInfo = await this.eos.getAccount(accountName);
+                const accountInfo = await eos.getAccount(accountName);
+
                 const mynewsfeed = await loadMyFeeds();
                 const myFeedsLength = mynewsfeed.length;
                 const myfeednextUpperBound = (mynewsfeed && myFeedsLength > 0 ? mynewsfeed[myFeedsLength - 1].id : 0);
@@ -395,6 +399,14 @@ class RootProvider extends Component {
                     myfeednextUpperBound
                 })
             }
+        },
+
+        setScatter: (scatter) => {
+
+            this.setState({
+                scatter,
+                eos : scatter && scatter.eos(AppCommon.NETWORK, Eos, AppCommon.CONFIG)
+            })            
         }
     }
 
@@ -417,7 +429,8 @@ function withRoot(WrappedComponent) {
             {
                 ({ state, actions }) => (
                     <WrappedComponent
-                        isInitialized={state.isInitialized}
+                        scatter={state.scatter}
+                        eos={state.eos}
                         identity={state.identity}
                         accountName={state.accountName}
                         accountInfo={state.accountInfo}
@@ -439,6 +452,7 @@ function withRoot(WrappedComponent) {
                         loadMyAccountInfo={actions.loadMyAccountInfo}
                         loadMyFeeds={actions.loadMyFeeds}
                         eosAccountPageLoaded={actions.eosAccountPageLoaded}
+                        setScatter={actions.setScatter}
                     />
                 )
             }
