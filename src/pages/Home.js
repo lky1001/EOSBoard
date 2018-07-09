@@ -86,22 +86,23 @@ class Home extends Component {
 
     componentDidMount = async () => {
         const { homePageLoaded } = this.props;
-        // window.addEventListener('scroll', this.handleScroll);
+        window.addEventListener('scroll', this.handleScroll);
 
-        // this.interval = setInterval(() => {
-        //     const { loadBetweenLatestAndCurrentFeed } = this.props;
-        //     loadBetweenLatestAndCurrentFeed();
-        // }, 10000);
+        this.interval = setInterval(() => {
+            const { loadBetweenLatestAndCurrentFeed } = this.props;
+            loadBetweenLatestAndCurrentFeed();
+        }, 10000);
 
-        // this.loginCheck = setInterval(() => {
-        //     const { checkLoginState } = this.props;
-        //     checkLoginState();
-        // }, 10000);
+        this.loginCheck = setInterval(() => {
+            const { checkLoginState } = this.props;
+            checkLoginState();
+        }, 10000);
 
         try{
             this.setState({
                 isLoading : true
             })
+            
             await homePageLoaded();
         }catch(err){
             console.log(err);

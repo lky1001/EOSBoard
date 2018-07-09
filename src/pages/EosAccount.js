@@ -8,8 +8,6 @@ import MyFeedList from '../components/MyFeedList';
 class EosAccount extends Component {
     componentDidMount = () => {
         const { eosAccountPageLoaded } = this.props;
-
-        console.log("고고");
         eosAccountPageLoaded();
     }
 

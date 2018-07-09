@@ -23,6 +23,7 @@ class RootProvider extends Component {
 
         if(!this.scatter){
             this.scatter = await new ScatterClient().getClient();
+            this.eos = this.scatter.eos(AppCommon.NETWORK, Eos, AppCommon.CONFIG)
             this.setState({
                 isInitialized : true
             })
@@ -143,9 +144,6 @@ class RootProvider extends Component {
         homePageLoaded: async () =>{
             await this._initialize();
 
-            const { login } = this.actions;
-            await login();
-
             try
             {
                 const { loadLatestFeeds, checkLoginState, notifyFeedsUpdated } = this.actions;
@@ -169,8 +167,7 @@ class RootProvider extends Component {
         },
 
         eosAccountPageLoaded : async () => {
-            const { login, loadMyAccountInfo} = this.actions;
-            await login();
+            const { loadMyAccountInfo} = this.actions;
             await loadMyAccountInfo();
         },
 
