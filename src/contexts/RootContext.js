@@ -385,7 +385,6 @@ class RootProvider extends Component {
             const { accountName } = this.state;
 
             if(eos && accountName){
-                console.log(accountName);
                 const { loadMyFeeds } = this.actions;
                 const accountInfo = await eos.getAccount(accountName);
 

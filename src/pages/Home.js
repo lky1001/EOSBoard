@@ -104,7 +104,6 @@ class Home extends Component {
     }
 
     scatterLoaded = async () => {
-        console.log("스태터 로딩됨");
         const { homePageLoaded } = this.props;
         window.addEventListener('scroll', this.handleScroll);
 
